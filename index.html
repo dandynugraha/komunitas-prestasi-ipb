@@ -119,8 +119,7 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
-
-
+loadLeaderboard()
 async function loadLeaderboard(){
 
 const { data } = await supabase
@@ -148,7 +147,6 @@ table.innerHTML += `
 
 }
 
-loadLeaderboard()
 async function loadStories(){
 
 const { data } = await supabase
