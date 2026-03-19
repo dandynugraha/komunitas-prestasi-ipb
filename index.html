@@ -1,44 +1,154 @@
 <!DOCTYPE html>
+
 <html>
 <head>
+
 <title>Komunitas Prestasi IPB</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 
-<body>
+<body class="bg-gray-50">
 
-<h1>Website Komunitas Prestasi IPB</h1>
+<!-- HEADER -->
 
-<p>Website sedang dikembangkan.</p>
+<header class="bg-white shadow">
+
+<div class="max-w-7xl mx-auto flex justify-between items-center p-4">
+
+<h1 class="text-xl font-bold">
+Komunitas Prestasi IPB
+</h1>
+
+<nav class="flex gap-6">
+
+<a href="#" class="font-semibold text-blue-600">Home</a> <a href="#">Informasi Lomba</a> <a href="#">Event</a> <a href="#">Fasilitas</a> <a href="#">About Us</a> <a href="#">FAQ</a>
+
+<a href="#" class="bg-blue-600 text-white px-4 py-2 rounded">
+Login
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+<!-- STORY SECTION -->
+
+<section class="max-w-7xl mx-auto p-10">
+
+<h2 class="text-2xl font-bold mb-6">
+Cerita Komunitas Prestasi
+</h2>
+
+<div id="storyContainer" class="grid grid-cols-3 gap-6"></div>
+
+</section>
+
+<!-- CLUSTER STATS -->
+
+<section class="max-w-7xl mx-auto p-10">
+
+<h2 class="text-2xl font-bold mb-6">
+Capaian Prestasi Cluster
+</h2>
+
+<div class="grid grid-cols-4 gap-6">
+
+<div class="bg-pink-400 text-white p-6 rounded">
+Olimpiade
+<p class="text-3xl font-bold" id="olimpiadeCount">0</p>
+</div>
+
+<div class="bg-yellow-400 text-white p-6 rounded">
+Bisnis
+<p class="text-3xl font-bold" id="bisnisCount">0</p>
+</div>
+
+<div class="bg-green-400 text-white p-6 rounded">
+Penulisan
+<p class="text-3xl font-bold" id="penulisanCount">0</p>
+</div>
+
+<div class="bg-blue-400 text-white p-6 rounded">
+Desain
+<p class="text-3xl font-bold" id="desainCount">0</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- LEADERBOARD -->
+
+<section class="max-w-7xl mx-auto p-10">
+
+<h2 class="text-2xl font-bold mb-6">
+Leaderboard
+</h2>
+
+<table class="w-full bg-white rounded shadow">
+
+<thead>
+
+<tr class="border-b">
+
+<th class="p-4 text-left">Rank</th>
+<th class="p-4 text-left">Nama</th>
+<th class="p-4 text-left">Cluster</th>
+<th class="p-4 text-left">Points</th>
+
+</tr>
+
+</thead>
+
+<tbody id="leaderboard"></tbody>
+
+</table>
+
+</section>
 
 <script>
 
-const supabaseUrl = 'https://uaygxlfwrsbjfsjmfpum.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I'
+const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co"
+const supabaseKey = "ANON_KEY_KAMU"
 
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
-async function testConnection(){
 
-console.log("Sedang mencoba menyambung...")
 
-const { data, error } = await supabaseClient
+async function loadLeaderboard(){
+
+const { data } = await supabase
 .from("members")
 .select("*")
+.order("points",{ascending:false})
+.limit(5)
 
-if(error){
+const table = document.getElementById("leaderboard")
 
-console.error("Error nih:", error.message)
+data.forEach((user,index)=>{
 
-}else{
+table.innerHTML += `
+<tr class="border-b">
 
-console.log("Koneksi Berhasil!", data)
+<td class="p-4">${index+1}</td>
+<td class="p-4">${user.name}</td>
+<td class="p-4">${user.cluster}</td>
+<td class="p-4">${user.points}</td>
+
+</tr>
+`
+
+})
 
 }
 
-}
-
-testConnection()
+loadLeaderboard()
 
 </script>
 
