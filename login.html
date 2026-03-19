@@ -1,81 +1,81 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="id">
 <head>
-
-<title>Login Anggota</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Anggota - Aksara Karya</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 
-<div class="bg-white p-8 rounded-xl shadow w-96">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-96 border border-gray-200">
+        <h1 class="text-2xl font-bold mb-2 text-center text-blue-900">Login Anggota</h1>
+        <p class="text-center text-gray-500 mb-6 text-sm">Masukkan Email & Kode Anggota</p>
 
-<h1 class="text-2xl font-bold mb-6 text-center">
-Login Anggota
-</h1>
+        <input id="email" type="email" placeholder="Email (ucok@email.com)" 
+               class="w-full border p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
-<input id="email"
-type="email"
-placeholder="Email"
-class="w-full border p-3 rounded mb-4">
+        <input id="password" type="password" placeholder="Kode Anggota (Password)" 
+               class="w-full border p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
-<input id="password"
-type="password"
-placeholder="Kode Anggota"
-class="w-full border p-3 rounded mb-4">
+        <button onclick="login()" id="btnLogin"
+                class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700 transition duration-200">
+            Masuk
+        </button>
 
-<button
-onclick="login()"
-class="w-full bg-blue-600 text-white p-3 rounded">
+        <p id="error" class="text-red-500 mt-4 text-center text-sm font-medium"></p>
+    </div>
 
-Login
+    <script>
+        // Inisialisasi Supabase dengan nama variabel yang berbeda agar tidak bentrok
+        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co"
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I"
+        
+        // Gunakan window.supabase untuk memanggil library
+        const _supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
-</button>
+        async function login() {
+            const emailVal = document.getElementById("email").value
+            const passwordVal = document.getElementById("password").value
+            const errorElement = document.getElementById("error")
+            const btn = document.getElementById("btnLogin")
 
-<p id="error" class="text-red-500 mt-4 text-center"></p>
+            // Reset pesan error & Ubah tombol jadi Loading
+            errorElement.innerText = ""
+            btn.innerText = "Mengecek..."
+            btn.disabled = true
 
-</div>
+            try {
+                const { data, error } = await _supabase
+                    .from("members")
+                    .select("*")
+                    .eq("email", emailVal)
+                    .eq("password", passwordVal)
+                    .single()
 
-<script>
+                if (error || !data) {
+                    errorElement.innerText = "Email atau kode anggota salah!"
+                    btn.innerText = "Masuk"
+                    btn.disabled = false
+                    return
+                }
 
-const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co"
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I"
+                // Simpan data ke memori browser
+                localStorage.setItem("user", JSON.stringify(data))
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+                // Pindah ke dashboard
+                window.location.href = "dashboard.html"
 
-async function login(){
-
-const email = document.getElementById("email").value
-const password = document.getElementById("password").value
-
-const { data, error } = await supabase
-.from("members")
-.select("*")
-.eq("email", email)
-.eq("password", password)
-.single()
-
-if(error){
-
-document.getElementById("error").innerText =
-"Email atau kode anggota salah"
-
-return
-
-}
-
-localStorage.setItem("user", JSON.stringify(data))
-
-window.location.href = "dashboard.html"
-
-}
-
-</script>
+            } catch (err) {
+                console.error(err)
+                errorElement.innerText = "Terjadi kesalahan koneksi."
+                btn.innerText = "Masuk"
+                btn.disabled = false
+            }
+        }
+    </script>
 
 </body>
 </html>
