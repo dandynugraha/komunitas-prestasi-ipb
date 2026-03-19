@@ -10,32 +10,32 @@
 </head>
 <body class="bg-gray-50 flex min-h-screen font-sans text-gray-900">
 
-    <aside class="w-72 bg-white border-r border-gray-200 flex flex-col fixed h-full transition-all">
+    <aside class="w-72 bg-white border-r border-gray-200 flex flex-col fixed h-full shadow-sm">
         <div class="p-8">
             <h1 class="text-2xl font-black text-blue-600 tracking-tighter">AKSARA <span class="text-gray-400">KARYA</span></h1>
         </div>
 
-        <nav class="flex-1 px-4 space-y-2">
-            <button onclick="showSection('upload-prestasi')" class="nav-btn active w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition group">
-                <i class="fa-solid fa-trophy mr-3 text-blue-500"></i> <span class="font-bold text-gray-600 group-hover:text-blue-600">Upload Prestasi</span>
+        <nav class="flex-1 px-4 space-y-2 overflow-y-auto">
+            <button onclick="showSection('upload-prestasi')" class="nav-btn active w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition">
+                <i class="fa-solid fa-trophy mr-3 text-blue-500 w-6"></i> <span class="font-bold text-gray-600">Upload Prestasi</span>
             </button>
-            <button onclick="showSection('upload-proyek')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition group">
-                <i class="fa-solid fa-laptop-code mr-3 text-gray-400 group-hover:text-blue-500"></i> <span class="font-bold text-gray-600 group-hover:text-blue-600">Upload Proyek</span>
+            <button onclick="showSection('upload-proyek')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition">
+                <i class="fa-solid fa-laptop-code mr-3 text-gray-400 w-6"></i> <span class="font-bold text-gray-600">Upload Proyek</span>
             </button>
-            <button onclick="showSection('event-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition group">
-                <i class="fa-solid fa-calendar-check mr-3 text-gray-400 group-hover:text-blue-500"></i> <span class="font-bold text-gray-600 group-hover:text-blue-600">Event Saya</span>
+            <button onclick="showSection('event-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition">
+                <i class="fa-solid fa-calendar-check mr-3 text-gray-400 w-6"></i> <span class="font-bold text-gray-600">Event Saya</span>
             </button>
-            <button onclick="showSection('lomba-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition group">
-                <i class="fa-solid fa-medal mr-3 text-gray-400 group-hover:text-blue-500"></i> <span class="font-bold text-gray-600 group-hover:text-blue-600">Lomba Saya</span>
+            <button onclick="showSection('lomba-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition">
+                <i class="fa-solid fa-medal mr-3 text-gray-400 w-6"></i> <span class="font-bold text-gray-600">Lomba Saya</span>
             </button>
-            <button onclick="showSection('my-plan')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition group">
-                <i class="fa-solid fa-map-location-dot mr-3 text-gray-400 group-hover:text-blue-500"></i> <span class="font-bold text-gray-600 group-hover:text-blue-600">My Plan</span>
+            <button onclick="showSection('my-plan')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition">
+                <i class="fa-solid fa-map-location-dot mr-3 text-gray-400 w-6"></i> <span class="font-bold text-gray-600">My Plan</span>
             </button>
 
             <div id="staff-only" class="hidden pt-6">
                 <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Internal Divisi</p>
                 <button onclick="showSection('divisi-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl bg-orange-50 text-orange-600 hover:bg-orange-100 transition">
-                    <i class="fa-solid fa-users-gear mr-3"></i> <span class="font-bold">Divisi Saya</span>
+                    <i class="fa-solid fa-users-gear mr-3 w-6"></i> <span class="font-bold">Divisi Saya</span>
                 </button>
             </div>
         </nav>
@@ -50,80 +50,125 @@
     <main class="ml-72 flex-1 p-10">
         <header class="flex justify-between items-center mb-10">
             <div>
-                <h2 id="userName" class="text-3xl font-black text-gray-800">Halo, Member</h2>
-                <p id="userCluster" class="text-gray-400 font-medium">Cluster: ...</p>
+                <h2 id="userName" class="text-3xl font-black text-gray-800 tracking-tight italic">Halo, ...</h2>
+                <p id="userCluster" class="text-gray-400 font-medium">Memuat info...</p>
             </div>
-            <div class="bg-blue-600 text-white p-4 rounded-3xl shadow-lg shadow-blue-200 flex items-center space-x-4">
-                <div class="bg-blue-500 p-2 rounded-xl"><i class="fa-solid fa-star"></i></div>
+            <div class="bg-blue-600 text-white p-5 rounded-[2rem] shadow-xl shadow-blue-100 flex items-center space-x-6">
+                <div class="bg-blue-500/50 p-3 rounded-2xl text-2xl"><i class="fa-solid fa-star"></i></div>
                 <div>
-                    <p class="text-[10px] font-bold uppercase opacity-80">Total Points</p>
-                    <p id="userPoints" class="text-2xl font-black">0</p>
+                    <p class="text-xs font-bold uppercase opacity-70 tracking-widest">Points</p>
+                    <p id="userPoints" class="text-3xl font-black tracking-tighter">0</p>
                 </div>
             </div>
         </header>
 
-        <section id="content-area">
-            <div id="section-upload-prestasi" class="content-section">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 max-w-2xl">
+        <div id="content-area" class="max-w-4xl">
+            
+            <div id="section-upload-prestasi" class="content-section space-y-6">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                     <h3 class="text-xl font-bold mb-6 italic text-blue-600 tracking-tight"># Lapor Prestasi Baru</h3>
-                    <div class="space-y-4">
-                        <input id="p-judul" type="text" placeholder="Judul Prestasi" class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition">
-                        <div class="grid grid-cols-2 gap-4">
-                            <select id="p-tingkat" class="p-4 bg-gray-50 border-none rounded-2xl outline-none">
-                                <option>Internasional</option>
-                                <option>Nasional</option>
-                                <option>Provinsi</option>
-                                <option>Universitas</option>
-                            </select>
-                            <input id="p-tanggal" type="date" class="p-4 bg-gray-50 border-none rounded-2xl outline-none">
-                        </div>
-                        <input id="p-foto" type="text" placeholder="Link Foto Bukti" class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition">
-                        <textarea id="p-cerita" placeholder="Ceritakan sedikit perjuanganmu..." class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none h-32 focus:ring-2 focus:ring-blue-500 transition"></textarea>
-                        <button onclick="savePrestasi()" class="w-full bg-blue-600 text-white font-black p-4 rounded-2xl shadow-lg shadow-blue-100 hover:bg-blue-700 transition">Unggah Sekarang</button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input id="pres-judul" placeholder="Judul Prestasi" class="form-input">
+                        <select id="pres-juara" class="form-input">
+                            <option>Juara 1</option><option>Juara 2</option><option>Juara 3</option><option>Harapan</option><option>Finalis</option>
+                        </select>
+                        <select id="pres-tingkat" class="form-input">
+                            <option>Internasional</option><option>Nasional</option><option>Provinsi</option><option>Universitas</option>
+                        </select>
+                        <input id="pres-tanggal" type="date" class="form-input">
+                        <input id="pres-foto" placeholder="Link Foto Bukti" class="form-input md:col-span-2">
+                        <textarea id="pres-cerita" placeholder="Ceritakan pengalamanmu..." class="form-input md:col-span-2 h-32"></textarea>
                     </div>
+                    <button onclick="saveGeneric('prestasi')" class="btn-primary mt-6">Kirim Laporan</button>
                 </div>
             </div>
 
-            <div id="section-upload-proyek" class="content-section hidden"> <h3 class="text-2xl font-bold">Upload Proyek</h3> <p>Fitur proyek akan segera hadir...</p> </div>
-            <div id="section-event-saya" class="content-section hidden"> <h3 class="text-2xl font-bold">Event Saya</h3> <p>Daftar event yang kamu ikuti...</p> </div>
-            <div id="section-lomba-saya" class="content-section hidden"> <h3 class="text-2xl font-bold">Lomba Saya</h3> <p>Pantau status lomba kamu...</p> </div>
-            <div id="section-my-plan" class="content-section hidden"> <h3 class="text-2xl font-bold">My Plan</h3> <p>Rencana masa depan kamu...</p> </div>
-            <div id="section-divisi-saya" class="content-section hidden"> <h3 class="text-2xl font-bold">Internal Divisi</h3> <p>Data khusus staff divisi kamu.</p> </div>
-        </section>
+            <div id="section-upload-proyek" class="content-section hidden space-y-6">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-6 italic text-purple-600 tracking-tight"># Upload Proyek / Portofolio</h3>
+                    <div class="grid grid-cols-1 gap-4">
+                        <input id="pro-nama" placeholder="Nama Proyek (Contoh: Desain Web Aksara)" class="form-input">
+                        <input id="pro-link" placeholder="Link Proyek (Github/Behance/Drive)" class="form-input">
+                        <textarea id="pro-desc" placeholder="Deskripsi singkat proyek..." class="form-input h-32"></textarea>
+                    </div>
+                    <button onclick="saveGeneric('proyek')" class="btn-primary bg-purple-600 hover:bg-purple-700 mt-6 shadow-purple-100">Simpan Proyek</button>
+                </div>
+            </div>
+
+            <div id="section-event-saya" class="content-section hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="list-event">
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm opacity-50 italic">Belum ada event yang diikuti.</div>
+                </div>
+            </div>
+
+            <div id="section-lomba-saya" class="content-section hidden">
+                <div class="bg-white p-8 rounded-3xl border border-gray-100">
+                    <h3 class="font-bold mb-4">Tracking Lomba Kamu</h3>
+                    <p class="text-gray-400">Fitur tracking progress lomba sedang dikembangkan.</p>
+                </div>
+            </div>
+
+            <div id="section-my-plan" class="content-section hidden">
+                <div class="bg-white p-8 rounded-3xl border border-gray-100">
+                    <h3 class="text-xl font-bold mb-6">🎯 My Growth Plan</h3>
+                    <textarea class="form-input h-64 mb-4" placeholder="Tuliskan targetmu semester ini (Misal: Ikut 3 Lomba, Belajar Figma, dll)"></textarea>
+                    <button class="btn-primary bg-green-600 hover:bg-green-700 shadow-green-100">Simpan Rencana</button>
+                </div>
+            </div>
+
+            <div id="section-divisi-saya" class="content-section hidden">
+                <div class="bg-orange-50 p-8 rounded-3xl border border-orange-100 text-orange-800">
+                    <h3 class="text-2xl font-black mb-4 uppercase italic">Internal Divisi Panel</h3>
+                    <p class="font-bold">Selamat datang staff! Gunakan panel ini untuk mengelola anggota clustermu.</p>
+                    <button onclick="goToStaffDashboard()" class="mt-6 bg-orange-600 text-white px-6 py-3 rounded-2xl font-bold">Buka Panel Tracking</button>
+                </div>
+            </div>
+
+        </div>
     </main>
 
     <style>
-        .nav-btn.active { background-color: #eff6ff; color: #2563eb; }
-        .nav-btn.active i { color: #2563eb; }
+        .form-input { @apply w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition; }
+        .btn-primary { @apply w-full text-white font-black p-4 rounded-2xl shadow-lg transition active:scale-95 bg-blue-600 hover:bg-blue-700 shadow-blue-100; }
+        .nav-btn.active { @apply bg-blue-50 text-blue-600 shadow-sm; }
+        .nav-btn.active i { @apply text-blue-600; }
+        .nav-btn.active span { @apply text-blue-600; }
     </style>
 
     <script>
-        const user = JSON.parse(localStorage.getItem("user"));
+        // 1. Inisialisasi Supabase
+        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
+        const supabaseKey = "ISI_API_KEY_ANON_KAMU_DISINI";
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Proteksi login
+        const user = JSON.parse(localStorage.getItem("user"));
         if(!user) window.location.href = "login.html";
 
-        // Tampilkan data user
+        // Tampilkan Identitas
         document.getElementById("userName").innerText = "Halo, " + user.name;
-        document.getElementById("userCluster").innerText = "Cluster: " + (user.cluster || "-");
+        document.getElementById("userCluster").innerText = "Cluster: " + (user.cluster || "Umum");
         document.getElementById("userPoints").innerText = user.points || 0;
 
-        // Cek jika dia STAFF (munculkan menu divisi)
+        // Cek Role Staff
         if(user.role.toLowerCase() !== 'member') {
             document.getElementById("staff-only").classList.remove("hidden");
         }
 
-        // Fungsi Ganti Halaman (Tab)
+        // Navigasi
         function showSection(sectionId) {
-            // Sembunyikan semua
             document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
-            // Hilangkan status active di semua tombol
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             
-            // Tampilkan yang dipilih
             document.getElementById('section-' + sectionId).classList.remove('hidden');
-            // Aktifkan tombol yang diklik
             event.currentTarget.classList.add('active');
+        }
+
+        function goToStaffDashboard() {
+            const role = user.role.toLowerCase();
+            if(role.includes('cda')) window.location.href = "dashboard-cda.html";
+            else if(role.includes('mbd')) window.location.href = "dashboard-mbd.html";
+            else if(role.includes('heg')) window.location.href = "dashboard-heg.html";
+            else if(role.includes('korvoks')) window.location.href = "dashboard-korvoks.html";
         }
 
         function logout() {
@@ -131,9 +176,9 @@
             window.location.href = "login.html";
         }
 
-        async function savePrestasi() {
-            alert("Sedang proses hubung ke database...");
-            // Logika upload prestasi seperti yang kita buat tadi ditaruh di sini
+        async function saveGeneric(type) {
+            alert("Data " + type + " sedang diproses ke database!");
+            // Logika insert database ditaruh di sini
         }
     </script>
 </body>
