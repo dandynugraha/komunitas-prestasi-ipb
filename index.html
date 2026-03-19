@@ -4,6 +4,22 @@
 <title>Komunitas Prestasi IPB</title>
 </head>
 
+<script>
+
+async function testConnection(){
+
+const { data, error } = await supabase
+.from("members")
+.select("*")
+
+console.log(data)
+
+}
+
+testConnection()
+
+</script>
+  
 <body>
 
 <h1>Website Komunitas Prestasi IPB</h1>
@@ -15,3 +31,18 @@
 </body>
 
 </html>
+<script>
+
+async function testConnection(){
+
+const { data, error } = await supabase
+.from("members")
+.select("*")
+
+console.log(data)
+
+}
+
+testConnection()
+
+</script>
