@@ -31,18 +31,3 @@ testConnection()
 </body>
 
 </html>
-<script>
-
-async function testConnection(){
-
-const { data, error } = await supabase
-.from("members")
-.select("*")
-
-console.log(data)
-
-}
-
-testConnection()
-
-</script>
