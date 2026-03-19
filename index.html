@@ -146,21 +146,36 @@
         }
 
         async function updateClusterStats() {
-            const { data } = await _supabase.from("prestasi").select("cluster");
-            if (!data) return;
-
-            const counts = { Olimpiade: 0, Bisnis: 0, Penulisan: 0, Desain: 0 };
-            data.forEach(item => {
-                if (counts[item.cluster] !== undefined) counts[item.cluster]++;
-            });
-
-            document.getElementById("olimpiadeCount").innerText = counts.Olimpiade;
-            document.getElementById("bisnisCount").innerText = counts.Bisnis;
-            document.getElementById("penulisanCount").innerText = counts.Penulisan;
-            document.getElementById("desainCount").innerText = counts.Desain;
+        const { data, error } = await _supabase
+            .from("prestasi")
+            .select("cluster")
+    
+        if (error) {
+            console.error("Cluster error:", error)
+            return
         }
-
+    
+        const counts = {
+            Olimpiade: 0,
+            Bisnis: 0,
+            Penulisan: 0,
+            Desain: 0
+        }
+    
+        data.forEach(item => {
+            const cluster = item.cluster
+            if (counts[cluster] !== undefined) {
+                counts[cluster]++
+            }
+        })
+    
+        document.getElementById("olimpiadeCount").innerText = counts.Olimpiade
+        document.getElementById("bisnisCount").innerText = counts.Bisnis
+        document.getElementById("penulisanCount").innerText = counts.Penulisan
+        document.getElementById("desainCount").innerText = counts.Desain
+    }
         init();
+        
     </script>
 </body>
 </html>
