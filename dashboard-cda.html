@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDA Dashboard - Tracking Cluster</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com/"></script>
+</head>
+<body class="bg-gray-50 flex min-h-screen">
+
+    <div class="w-64 bg-indigo-900 text-white p-6 shadow-xl">
+        <h1 class="text-xl font-black mb-8 tracking-tighter text-indigo-300">CDA PANEL</h1>
+        <nav class="space-y-3">
+            <div class="p-3 bg-indigo-800 rounded-xl font-bold">Tracking Cluster</div>
+            <button onclick="logout()" class="w-full text-left p-3 text-indigo-300 hover:text-red-400">Logout</button>
+        </nav>
+    </div>
+
+    <div class="flex-1 p-8">
+        <header class="mb-10 flex justify-between items-end">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800" id="cdaName">Halo, CDA</h2>
+                <p class="text-indigo-600 font-semibold" id="clusterInfo">Memuat info cluster...</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 text-right">
+                <p class="text-xs font-bold text-gray-400 uppercase">Total Anak Buah</p>
+                <p class="text-2xl font-black text-indigo-600" id="countMember">0</p>
+            </div>
+        </header>
+
+        <section class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 mb-8">
+            <h3 class="font-bold text-gray-700 mb-4 flex items-center">
+                <span class="mr-2">⚡</span> Input Poin Prestasi Langsung
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <input id="targetEmail" type="text" placeholder="Email Member" class="border p-3 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">
+                <input id="judulLomba" type="text" placeholder="Nama Lomba" class="border p-3 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">
+                <input id="linkFoto" type="text" placeholder="Link Foto Bukti" class="border p-3 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">
+                <button onclick="submitPoin()" class="bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition">Kirim Poin</button>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-50 bg-gray-50/50">
+                <h3 class="font-bold text-gray-800">Daftar Anggota Cluster Kamu</h3>
+            </div>
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-gray-400 text-sm uppercase tracking-wider">
+                        <th class="p-6">Nama Anggota</th>
+                        <th class="p-6">Email</th>
+                        <th class="p-6 text-center">Poin</th>
+                        <th class="p-6">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="memberList" class="divide-y divide-gray-50">
+                    </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script>
+        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
+        const supabaseKey = "KUNCI_ANON_KAMU_DISINI";
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        // Proteksi Halaman
+        if(!user || !user.role.toLowerCase().includes('cda')) {
+            window.location.href = "login.html";
+        }
+
+        // Tampilkan Identitas CDA
+        document.getElementById("cdaName").innerText = "Halo, " + user.name;
+        document.getElementById("clusterInfo").innerText = "Penanggung Jawab Cluster: " + (user.cluster || "Umum");
+
+        async function loadMyMembers() {
+            // FILTER: Hanya ambil member yang clusternya SAMA dengan cluster si CDA
+            const { data, error } = await _supabase
+                .from("members")
+                .select("*")
+                .eq("cluster", user.cluster)
+                .eq("role", "member")
+                .order("points", { ascending: false });
+
+            if (data) {
+                document.getElementById("countMember").innerText = data.length;
+                const tbody = document.getElementById("memberList");
+                tbody.innerHTML = data.map(m => `
+                    <tr class="hover:bg-indigo-50/30 transition">
+                        <td class="p-6 font-bold text-gray-700">${m.name}</td>
+                        <td class="p-6 text-gray-500">${m.email}</td>
+                        <td class="p-6 text-center">
+                            <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-bold">${m.points}</span>
+                        </td>
+                        <td class="p-6">
+                            <button onclick="pilihMember('${m.email}')" class="text-indigo-600 font-bold hover:underline">Pilih</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function pilihMember(email) {
+            document.getElementById("targetEmail").value = email;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function submitPoin() {
+            const email = document.getElementById("targetEmail").value;
+            const judul = document.getElementById("judulLomba").value;
+            const foto = document.getElementById("linkFoto").value;
+            
+            if(!email || !judul) return alert("Isi minimal Email dan Judul!");
+
+            // Logika sederhana: Juara 1 Nasional = 300 poin (Bisa kamu modifikasi)
+            const poinDefault = 300; 
+
+            // 1. Update Poin di Tabel Members
+            const { data: mData } = await _supabase.from("members").select("points").eq("email", email).single();
+            await _supabase.from("members").update({ points: (mData.points || 0) + poinDefault }).eq("email", email);
+
+            // 2. Masukkan ke Tabel Kegiatan (Agar muncul di Home/Index)
+            await _supabase.from("kegiatan").insert([{
+                email_penerima: email,
+                kategori: 'Prestasi',
+                judul: judul,
+                poin: poinDefault,
+                gambar_url: foto,
+                oleh_role: 'cda (' + user.cluster + ')'
+            }]);
+
+            alert("Berhasil! Poin terkirim dan data tayang di Home.");
+            location.reload();
+        }
+
+        loadMyMembers();
+
+        function logout() {
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>
