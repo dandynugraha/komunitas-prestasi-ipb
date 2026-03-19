@@ -18,7 +18,9 @@
                 <a href="#" class="hover:text-blue-600 transition">Event</a>
                 <a href="#" class="hover:text-blue-600 transition">Fasilitas</a>
                 <a href="#" class="hover:text-blue-600 transition">About Us</a>
-                <a href="#" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">Login</a>
+                <a href="login.html" class="bg-blue-600 text-white px-5 py-2 rounded-lg">
+                Login
+                </a>
             </nav>
         </div>
     </header>
@@ -113,10 +115,23 @@
                 .select("*")
                 .order("created_at", { ascending: false })
                 .limit(6);
-
+            
+                console.log("Data prestasi dari Supabase:", data);
+            if (error) console.error("Error ambil cerita:", error);
+            
             const container = document.getElementById("storyContainer");
+            
             if (error) {
                 container.innerHTML = `<p class="text-red-500">Gagal memuat data.</p>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                    container.innerHTML = `
+                        <p class="text-gray-400">
+                            Belum ada cerita prestasi.
+                        </p>
+                    `;
                 return;
             }
 
@@ -133,21 +148,36 @@
         }
 
         async function updateClusterStats() {
-            const { data } = await _supabase.from("prestasi").select("cluster");
-            if (!data) return;
-
-            const counts = { Olimpiade: 0, Bisnis: 0, Penulisan: 0, Desain: 0 };
-            data.forEach(item => {
-                if (counts[item.cluster] !== undefined) counts[item.cluster]++;
-            });
-
-            document.getElementById("olimpiadeCount").innerText = counts.Olimpiade;
-            document.getElementById("bisnisCount").innerText = counts.Bisnis;
-            document.getElementById("penulisanCount").innerText = counts.Penulisan;
-            document.getElementById("desainCount").innerText = counts.Desain;
+        const { data, error } = await _supabase
+            .from("prestasi")
+            .select("cluster")
+    
+        if (error) {
+            console.error("Cluster error:", error)
+            return
         }
-
+    
+        const counts = {
+            Olimpiade: 0,
+            Bisnis: 0,
+            Penulisan: 0,
+            Desain: 0
+        }
+    
+        data.forEach(item => {
+            const cluster = item.cluster
+            if (counts[cluster] !== undefined) {
+                counts[cluster]++
+            }
+        })
+    
+        document.getElementById("olimpiadeCount").innerText = counts.Olimpiade
+        document.getElementById("bisnisCount").innerText = counts.Bisnis
+        document.getElementById("penulisanCount").innerText = counts.Penulisan
+        document.getElementById("desainCount").innerText = counts.Desain
+    }
         init();
+        
     </script>
 </body>
 </html>
