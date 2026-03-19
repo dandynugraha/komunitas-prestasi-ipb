@@ -1,38 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Komunitas Prestasi IPB</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body>
+<script>
+const supabaseUrl = "https://fofgkmqpvovbocjzjrfg.supabase.co"
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I"
 
-    <h1>Website Komunitas Prestasi IPB</h1>
-    <p>Website sedang dikembangkan.</p>
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
 
-    <script>
-        // 2. Inisialisasi Koneksi
-        const supabaseUrl = 'https://fofgkmqpvovbocjzjrfg.supabase.co'
-        const supabaseKey = 'sb_publishable_zirL9ncK9SCs8zxXOFq1pQ_ZNPM5eJc'
-        
-        // Gunakan cara panggil yang benar untuk versi CDN
-        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+async function testConnection(){
 
-        async function testConnection() {
-            console.log("Sedang mencoba menyambung...");
-            
-            const { data, error } = await supabaseClient
-                .from("members")
-                .select("*")
+console.log("Sedang mencoba menyambung...")
 
-            if (error) {
-                console.error("Error nih:", error.message)
-            } else {
-                console.log("Koneksi Berhasil! Data dari tabel members:", data)
-            }
-        }
+const { data, error } = await supabaseClient
+.from("members")
+.select("*")
 
-        // 3. Jalankan fungsi
-        testConnection()
-    </script>
-</body>
-</html>
+if(error){
+
+console.error("Error:", error)
+
+}else{
+
+console.log("Berhasil connect:", data)
+
+}
+
+}
+
+testConnection()
+</script>
