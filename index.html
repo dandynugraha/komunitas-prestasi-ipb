@@ -4,97 +4,186 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aksara Karya 62 - Home</title>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body class="bg-gray-900 text-white font-sans">
 
-    <nav class="p-6 flex justify-between items-center border-b border-gray-800">
-        <h1 class="text-2xl font-black tracking-tighter text-blue-500">AKSARA KARYA 62</h1>
-        <div class="space-x-6 font-bold text-sm uppercase text-gray-400">
-            <a href="#" class="text-white">Home</a>
-            <a href="#">Informasi Lomba</a>
-            <a href="#">Event</a>
-            <a href="login.html" class="bg-blue-600 px-6 py-3 rounded-full text-white">Login</a>
-        </div>
-    </nav>
+<nav class="p-6 flex justify-between items-center border-b border-gray-800">
+    <h1 class="text-2xl font-black tracking-tighter text-blue-500">AKSARA KARYA 62</h1>
 
-    <main class="p-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
-        
-        <div class="lg:col-span-2 space-y-8">
-            <h2 class="text-4xl font-black italic underline decoration-blue-500">CAPAIAN TERKINI</h2>
-            <div id="feed-container" class="space-y-6">
-                </div>
+    <div class="space-x-6 font-bold text-sm uppercase text-gray-400">
+        <a href="#" class="text-white">Home</a>
+        <a href="#">Informasi Lomba</a>
+        <a href="#">Event</a>
+        <a href="login.html" class="bg-blue-600 px-6 py-3 rounded-full text-white">Login</a>
+    </div>
+</nav>
+
+<main class="p-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+    <div class="lg:col-span-2 space-y-8">
+        <h2 class="text-4xl font-black italic underline decoration-blue-500">CAPAIAN TERKINI</h2>
+        <div id="feed-container" class="space-y-6"></div>
+    </div>
+
+    <div class="space-y-10">
+
+        <div class="bg-gray-800 p-8 rounded-[2.5rem] border border-gray-700">
+            <h3 class="font-black mb-6 text-center text-xl uppercase tracking-widest">
+                Statistik Cluster
+            </h3>
+            <canvas id="clusterChart"></canvas>
         </div>
 
-        <div class="space-y-10">
-            <div class="bg-gray-800 p-8 rounded-[2.5rem] border border-gray-700">
-                <h3 class="font-black mb-6 text-center text-xl uppercase tracking-widest">Statistik Cluster</h3>
-                <canvas id="clusterChart"></canvas>
+        <div class="bg-blue-600 p-8 rounded-[2.5rem] shadow-2xl shadow-blue-500/20">
+            <h3 class="font-black mb-6 text-center text-xl uppercase">Top Leaderboard</h3>
+            <div id="leaderboard-list" class="space-y-4 font-bold"></div>
+        </div>
+
+    </div>
+
+</main>
+
+<script>
+
+const SUPABASE_URL = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I";
+
+/* FIX ERROR SUPABASE */
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+async function initHome(){
+
+    /* FEED CAPAIAN */
+    const { data: news } = await supabaseClient
+        .from('kegiatan')
+        .select('*')
+        .order('created_at', { ascending:false })
+        .limit(10);
+
+    document.getElementById("feed-container").innerHTML =
+        news.map(n => `
+        <div class="bg-gray-800 rounded-3xl overflow-hidden border border-gray-700 hover:scale-[1.02] transition">
+
+            <img src="${n.gambar_url}" class="w-full h-64 object-cover">
+
+            <div class="p-6">
+
+                <span class="bg-blue-600 text-xs px-3 py-1 rounded-full font-black uppercase">
+                    ${n.cluster}
+                </span>
+
+                <h3 class="text-2xl font-black mt-2 uppercase">
+                    ${n.judul}
+                </h3>
+
+                <p class="text-gray-400 mt-2">
+                    ${n.deskripsi}
+                </p>
+
+                <p class="text-sm text-blue-400 mt-4">
+                    Oleh: ${n.nama_pelaku}
+                </p>
+
             </div>
 
-            <div class="bg-blue-600 p-8 rounded-[2.5rem] shadow-2xl shadow-blue-500/20">
-                <h3 class="font-black mb-6 text-center text-xl uppercase">Top Leaderboard</h3>
-                <div id="leaderboard-list" class="space-y-4 font-bold">
-                    </div>
-            </div>
         </div>
+        `).join("");
 
-    </main>
 
-    <script>
-        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
-        const supabaseKey = "KUNCI_ANON_KAMU";
-        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        async function initHome() {
-            // 1. Muat Feed Berita
-            const { data: news } = await _supabase.from('kegiatan').select('*').order('created_at', {ascending: false}).limit(10);
-            document.getElementById('feed-container').innerHTML = news.map(n => `
-                <div class="bg-gray-800 rounded-3xl overflow-hidden border border-gray-700 hover:scale-[1.02] transition">
-                    <img src="${n.gambar_url}" class="w-full h-64 object-cover">
-                    <div class="p-6">
-                        <span class="bg-blue-600 text-xs px-3 py-1 rounded-full font-black uppercase">${n.cluster}</span>
-                        <h3 class="text-2xl font-black mt-2 uppercase">${n.judul}</h3>
-                        <p class="text-gray-400 mt-2">${n.deskripsi}</p>
-                        <p class="text-sm text-blue-400 mt-4">Oleh: ${n.nama_pelaku}</p>
-                    </div>
-                </div>
-            `).join('');
+    /* LEADERBOARD */
+    const { data: leaders } = await supabaseClient
+        .from('members')
+        .select('name, points')
+        .order('points', { ascending:false })
+        .limit(5);
 
-            // 2. Muat Leaderboard
-            const { data: leaders } = await _supabase.from('members').select('name, points').order('points', {ascending: false}).limit(5);
-            document.getElementById('leaderboard-list').innerHTML = leaders.map((l, i) => `
-                <div class="flex justify-between items-center bg-blue-700/50 p-4 rounded-2xl">
-                    <span>${i+1}. ${l.name}</span>
-                    <span class="bg-white text-blue-600 px-3 py-1 rounded-xl text-xs font-black">${l.points} PT</span>
-                </div>
-            `).join('');
+    document.getElementById("leaderboard-list").innerHTML =
+        leaders.map((l,i)=>`
+        <div class="flex justify-between items-center bg-blue-700/50 p-4 rounded-2xl">
 
-            // 3. Buat Chart Statistik Cluster
-            renderChart();
+            <span>${i+1}. ${l.name}</span>
+
+            <span class="bg-white text-blue-600 px-3 py-1 rounded-xl text-xs font-black">
+                ${l.points} PT
+            </span>
+
+        </div>
+        `).join("");
+
+
+
+    renderChart();
+}
+
+
+
+async function renderChart(){
+
+    const { data: stats } = await supabaseClient
+        .from('prestasi')
+        .select('cluster');
+
+    const counts = {
+        bisnis:0,
+        desain:0,
+        penulisan:0,
+        olimpiade:0
+    };
+
+    stats.forEach(s=>{
+        if(counts[s.cluster] !== undefined){
+            counts[s.cluster]++;
+        }
+    });
+
+    new Chart(document.getElementById("clusterChart"),{
+
+        type:"pie",
+
+        data:{
+            labels:["Bisnis","Desain","Penulisan","Olimpiade"],
+            datasets:[{
+                data:[
+                    counts.bisnis,
+                    counts.desain,
+                    counts.penulisan,
+                    counts.olimpiade
+                ],
+                backgroundColor:[
+                    "#3b82f6",
+                    "#ec4899",
+                    "#f59e0b",
+                    "#10b981"
+                ]
+            }]
+        },
+
+        options:{
+            plugins:{
+                legend:{
+                    labels:{
+                        color:"white",
+                        font:{ weight:"bold" }
+                    }
+                }
+            }
         }
 
-        async function renderChart() {
-            const { data: stats } = await _supabase.from('prestasi').select('cluster');
-            const counts = { 'bisnis': 0, 'desain': 0, 'penulisan': 0, 'olimpiade': 0 };
-            stats.forEach(s => { if(counts[s.cluster] !== undefined) counts[s.cluster]++; });
+    });
+}
 
-            new Chart(document.getElementById('clusterChart'), {
-                type: 'pie',
-                data: {
-                    labels: ['Bisnis', 'Desain', 'Penulisan', 'Olimpiade'],
-                    datasets: [{
-                        data: [counts.bisnis, counts.desain, counts.penulisan, counts.olimpiade],
-                        backgroundColor: ['#3b82f6', '#ec4899', '#f59e0b', '#10b981']
-                    }]
-                },
-                options: { plugins: { legend: { labels: { color: 'white', font: { weight: 'bold' } } } } }
-            });
-        }
+initHome();
 
-        initHome();
-    </script>
+</script>
+
 </body>
 </html>
