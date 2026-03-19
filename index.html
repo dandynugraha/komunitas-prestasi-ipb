@@ -1,6 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Komunitas Prestasi IPB</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<h1>Website Komunitas Prestasi IPB</h1>
+
+<p>Website sedang dikembangkan.</p>
+
 <script>
-const supabaseUrl = "https://fofgkmqpvovbocjzjrfg.supabase.co"
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I"
+
+const supabaseUrl = 'https://fofgkmqpvovbocjzjrfg.supabase.co'
+const supabaseKey = 'PASTE_ANON_KEY_KAMU'
 
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
 
@@ -14,15 +28,19 @@ const { data, error } = await supabaseClient
 
 if(error){
 
-console.error("Error:", error)
+console.error("Error nih:", error.message)
 
 }else{
 
-console.log("Berhasil connect:", data)
+console.log("Koneksi Berhasil!", data)
 
 }
 
 }
 
 testConnection()
+
 </script>
+
+</body>
+</html>
