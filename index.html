@@ -3,149 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aksara Karya 62 - Home</title>
+    <title>Komunitas Prestasi IPB</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-gray-50 text-gray-800">
 
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <h1 class="text-2xl font-black text-blue-600 tracking-tighter italic">AKSARA <span class="text-gray-400">KARYA 62</span></h1>
-            <div class="hidden md:flex space-x-8 font-bold text-sm uppercase tracking-widest text-gray-500">
-                <a href="#" class="hover:text-blue-600 transition">Home</a>
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
+            <h1 class="text-xl font-bold text-blue-900">Komunitas Prestasi IPB</h1>
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#" class="font-semibold text-blue-600">Home</a>
                 <a href="#" class="hover:text-blue-600 transition">Informasi Lomba</a>
                 <a href="#" class="hover:text-blue-600 transition">Event</a>
+                <a href="#" class="hover:text-blue-600 transition">Fasilitas</a>
                 <a href="#" class="hover:text-blue-600 transition">About Us</a>
-            </div>
-            <a href="login.html" class="bg-blue-600 text-white px-8 py-3 rounded-full font-black text-sm shadow-lg shadow-blue-100 hover:scale-105 transition">LOGIN</a>
-        </div>
-    </nav>
-
-    <header class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-1 bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
-            <h3 class="text-lg font-black mb-6 uppercase tracking-tighter italic"># Statistik Cluster</h3>
-            <canvas id="clusterChart"></canvas>
-            <div id="chartLegend" class="mt-6 space-y-2"></div>
-        </div>
-
-        <div class="lg:col-span-2 space-y-6">
-            <h3 class="text-lg font-black uppercase tracking-tighter italic px-4"># Capaian Terbaru</h3>
-            <div id="achievementFeed" class="space-y-6">
-                <p class="p-10 text-center text-gray-400 italic">Memuat berita terbaru...</p>
-            </div>
+                <a href="#" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">Login</a>
+            </nav>
         </div>
     </header>
 
-    <section class="max-w-7xl mx-auto px-6 py-12">
-        <div class="bg-gray-900 rounded-[3rem] p-10 text-white overflow-hidden relative">
-            <div class="relative z-10">
-                <h3 class="text-2xl font-black mb-8 italic">Top Members Leaderboard</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="leaderboardList">
-                    </div>
+    <section class="max-w-7xl mx-auto p-6 md:p-10">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+            <span class="w-2 h-8 bg-blue-600 rounded-full"></span> Cerita Komunitas Prestasi
+        </h2>
+        <div id="storyContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <p class="text-gray-400 animate-pulse">Memuat cerita...</p>
+        </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto p-6 md:p-10">
+        <h2 class="text-2xl font-bold mb-6">Capaian Prestasi Cluster</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div class="bg-pink-500 text-white p-6 rounded-2xl shadow-sm">
+                <p class="text-sm opacity-90">Olimpiade</p>
+                <p class="text-4xl font-black" id="olimpiadeCount">0</p>
             </div>
-            <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600 rounded-full blur-[120px] opacity-20"></div>
+            <div class="bg-amber-400 text-white p-6 rounded-2xl shadow-sm">
+                <p class="text-sm opacity-90">Bisnis</p>
+                <p class="text-4xl font-black" id="bisnisCount">0</p>
+            </div>
+            <div class="bg-emerald-500 text-white p-6 rounded-2xl shadow-sm">
+                <p class="text-sm opacity-90">Penulisan</p>
+                <p class="text-4xl font-black" id="penulisanCount">0</p>
+            </div>
+            <div class="bg-blue-500 text-white p-6 rounded-2xl shadow-sm">
+                <p class="text-sm opacity-90">Desain</p>
+                <p class="text-4xl font-black" id="desainCount">0</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto p-6 md:p-10 pb-20">
+        <h2 class="text-2xl font-bold mb-6">Top Leaderboard</h2>
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-50 text-gray-500 text-sm">
+                        <th class="p-4 text-left">Rank</th>
+                        <th class="p-4 text-left">Nama</th>
+                        <th class="p-4 text-left">Cluster</th>
+                        <th class="p-4 text-right">Points</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard" class="divide-y divide-gray-100">
+                    </tbody>
+            </table>
         </div>
     </section>
 
     <script>
-        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
-        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I";
-        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co"
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I"
+        
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey)
 
-        async function initHome() {
-            // 1. Ambil 10 Prestasi Terbaru (News Feed)
-            const { data: prestasis } = await _supabase
-                .from("prestasi")
-                .select("*")
-                .eq("status", "approved") // Hanya yang sudah diverifikasi CDA
-                .order("created_at", { ascending: false })
-                .limit(10);
+        // Inisialisasi Aplikasi
+        async function init() {
+            await Promise.all([
+                loadLeaderboard(),
+                loadStories(),
+                updateClusterStats()
+            ]);
+        }
 
-            if(prestasis) renderFeed(prestasis);
-
-            // 2. Kalkulasi Capaian Per Cluster untuk Chart
-            renderChart(prestasis);
-
-            // 3. Leaderboard (Berdasarkan poin di tabel members)
-            const { data: topMembers } = await _supabase
+        async function loadLeaderboard() {
+            const { data, error } = await _supabase
                 .from("members")
                 .select("*")
                 .order("points", { ascending: false })
-                .limit(3);
-            
-            if(topMembers) renderLeaderboard(topMembers);
+                .limit(5);
+
+            if (error) return console.error("Leaderboard Error:", error);
+
+            const table = document.getElementById("leaderboard");
+            table.innerHTML = data.map((user, index) => `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 font-bold text-blue-600">#${index + 1}</td>
+                    <td class="p-4 font-medium">${user.name}</td>
+                    <td class="p-4"><span class="px-3 py-1 bg-gray-100 rounded-full text-xs">${user.cluster}</span></td>
+                    <td class="p-4 text-right font-bold text-orange-500">${user.points}</td>
+                </tr>
+            `).join('');
         }
 
-        function renderFeed(data) {
-            const container = document.getElementById("achievementFeed");
-            if(data.length === 0) {
-                container.innerHTML = `<div class="bg-white p-10 rounded-3xl text-center text-gray-400">Belum ada capaian yang diverifikasi.</div>`;
+        async function loadStories() {
+            const { data, error } = await _supabase
+                .from("prestasi")
+                .select("*")
+                .order("created_at", { ascending: false })
+                .limit(6);
+
+            const container = document.getElementById("storyContainer");
+            if (error) {
+                container.innerHTML = `<p class="text-red-500">Gagal memuat data.</p>`;
                 return;
             }
 
-            container.innerHTML = data.map(p => `
-                <div class="bg-white rounded-[2rem] overflow-hidden shadow-sm border border-gray-100 flex flex-col md:flex-row">
-                    <img src="${p.foto_url}" class="w-full md:w-64 h-48 object-cover">
-                    <div class="p-8">
-                        <span class="bg-blue-50 text-blue-600 text-[10px] font-black px-3 py-1 rounded-full uppercase">${p.cluster}</span>
-                        <h4 class="text-xl font-bold mt-2">${p.judul}</h4>
-                        <p class="text-sm text-gray-500 mt-2 line-clamp-2 italic">"${p.story}"</p>
-                        <div class="mt-4 flex items-center text-xs font-bold text-gray-400 uppercase tracking-widest">
-                            <i class="fa-solid fa-user-circle mr-2 text-blue-400"></i> ${p.nama_member}
-                        </div>
+            container.innerHTML = data.map(post => `
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
+                    <img src="${post.image || 'https://via.placeholder.com/400x200'}" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">${post.member_name || 'Member'}</span>
+                        <h3 class="font-bold text-lg mt-1">${post.title}</h3>
+                        <p class="text-sm text-gray-500 mt-2 line-clamp-3">${post.story}</p>
                     </div>
                 </div>
             `).join('');
         }
 
-        function renderChart(data) {
-            const ctx = document.getElementById('clusterChart').getContext('2d');
-            const counts = { 'bisnis': 0, 'desain': 0, 'penulisan': 0, 'olimpiade': 0 };
-            
-            data.forEach(p => {
-                const c = p.cluster.toLowerCase();
-                if(counts.hasOwnProperty(c)) counts[c]++;
+        async function updateClusterStats() {
+            const { data } = await _supabase.from("prestasi").select("cluster");
+            if (!data) return;
+
+            const counts = { Olimpiade: 0, Bisnis: 0, Penulisan: 0, Desain: 0 };
+            data.forEach(item => {
+                if (counts[item.cluster] !== undefined) counts[item.cluster]++;
             });
 
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(counts).map(k => k.toUpperCase()),
-                    datasets: [{
-                        data: Object.values(counts),
-                        backgroundColor: ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b'],
-                        borderWidth: 0
-                    }]
-                },
-                options: { plugins: { legend: { display: false } } }
-            });
-
-            // Custom Legend
-            document.getElementById("chartLegend").innerHTML = Object.keys(counts).map((k, i) => `
-                <div class="flex justify-between items-center text-sm font-bold">
-                    <span class="flex items-center"><span class="w-3 h-3 rounded-full mr-2" style="background:${['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b'][i]}"></span> ${k.toUpperCase()}</span>
-                    <span class="text-gray-400">${counts[k]} Post</span>
-                </div>
-            `).join('');
+            document.getElementById("olimpiadeCount").innerText = counts.Olimpiade;
+            document.getElementById("bisnisCount").innerText = counts.Bisnis;
+            document.getElementById("penulisanCount").innerText = counts.Penulisan;
+            document.getElementById("desainCount").innerText = counts.Desain;
         }
 
-        function renderLeaderboard(members) {
-            const list = document.getElementById("leaderboardList");
-            list.innerHTML = members.map((m, i) => `
-                <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 flex items-center space-x-4">
-                    <div class="text-3xl font-black text-blue-400">#${i+1}</div>
-                    <div>
-                        <p class="font-bold text-lg">${m.name}</p>
-                        <p class="text-xs text-gray-400 uppercase tracking-widest">${m.cluster}</p>
-                        <p class="text-blue-400 font-black mt-1">${m.points} Points</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        initHome();
+        init();
     </script>
 </body>
 </html>
