@@ -7,100 +7,171 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 flex">
+<body class="bg-gray-50 font-sans">
 
-    <div class="w-64 bg-blue-900 h-screen shadow text-white hidden md:block">
-        <h1 class="text-xl font-bold p-6 border-b border-blue-800 tracking-wider">AKSARAKARYA</h1>
-        <ul class="p-4 space-y-3">
-            <li class="bg-blue-800 p-3 rounded-lg cursor-pointer">Dashboard</li>
-            <li class="p-3 hover:bg-blue-800 rounded-lg cursor-pointer opacity-70">My Plan</li>
-            <li class="p-3 hover:bg-blue-800 rounded-lg cursor-pointer opacity-70">Leaderboard</li>
-            <li><button onclick="logout()" class="text-red-400 p-3 mt-10 hover:text-red-300">Log Out</button></li>
-        </ul>
-    </div>
-
-    <div class="flex-1 p-6 md:p-10 h-screen overflow-y-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-bold text-gray-800" id="username">Memuat...</h2>
-            <div class="bg-orange-100 text-orange-600 px-4 py-2 rounded-full font-bold text-sm">
-                Poin: <span id="userPoints">0</span>
+    <div class="flex min-h-screen">
+        <div class="w-64 bg-blue-900 text-white flex-shrink-0 shadow-xl hidden md:block">
+            <div class="p-6 border-b border-blue-800">
+                <h1 class="text-xl font-bold tracking-widest text-blue-200">AKSARA KARYA</h1>
             </div>
+            <nav class="p-4 space-y-2">
+                <a href="#" class="block p-3 bg-blue-800 rounded-xl font-bold italic shadow-sm">Dashboard</a>
+                <a href="index.html" class="block p-3 hover:bg-blue-800 rounded-xl transition">Lihat Leaderboard</a>
+                <button onclick="logout()" class="w-full text-left p-3 text-red-400 hover:bg-red-900/30 rounded-xl transition mt-10">
+                    Keluar (Logout)
+                </button>
+            </nav>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
-            <h3 class="font-bold text-lg mb-4 text-blue-900">Upload Prestasi Baru</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input id="pTitle" type="text" placeholder="Judul Prestasi (Juara 1 Lomba...)" class="border p-3 rounded-lg w-full outline-none focus:ring-2 focus:ring-blue-500">
-                <select id="pCluster" class="border p-3 rounded-lg w-full outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="Olimpiade">Olimpiade</option>
-                    <option value="Bisnis">Bisnis</option>
-                    <option value="Penulisan">Penulisan</option>
-                    <option value="Desain">Desain</option>
-                </select>
-                <textarea id="pStory" placeholder="Ceritakan singkat pengalamanmu..." class="border p-3 rounded-lg w-full md:col-span-2 h-24 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                <input id="pImage" type="text" placeholder="Link Foto (Imgur/Gdrive)" class="border p-3 rounded-lg w-full md:col-span-2 outline-none focus:ring-2 focus:ring-blue-500">
+        <div class="flex-1 p-6 md:p-10">
+            <div class="flex justify-between items-center mb-10 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800" id="welcomeUser">Halo, Memuat...</h2>
+                    <p class="text-gray-500 text-sm">Ayo lapor prestasi barumu hari ini!</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Poin Kamu</p>
+                    <p class="text-3xl font-black text-blue-600" id="displayPoints">0</p>
+                </div>
             </div>
-            <button onclick="uploadPrestasi()" id="btnUpload" class="mt-4 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition w-full md:w-auto">
-                Kirim Prestasi
-            </button>
-        </div>
 
-        <div id="statusMsg" class="mb-4 hidden p-3 rounded-lg text-center font-medium"></div>
+            <div class="max-w-2xl bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="bg-blue-100 p-2 rounded-lg text-blue-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800">Upload Prestasi Baru</h2>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-sm font-semibold text-gray-600">Judul Prestasi</label>
+                        <input id="title" type="text" placeholder="Juara 1 Lomba Startup Nasional..." 
+                            class="w-full border border-gray-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm font-semibold text-gray-600">Cluster</label>
+                            <select id="cluster" class="w-full border border-gray-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 cursor-pointer">
+                                <option>Olimpiade</option>
+                                <option>Bisnis</option>
+                                <option>Penulisan</option>
+                                <option>Desain</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-gray-600">Link Foto (Sertifikat/Dokumentasi)</label>
+                            <input id="image" type="text" placeholder="https://link-foto.com/sertif.jpg" 
+                                class="w-full border border-gray-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold text-gray-600">Cerita Prestasi</label>
+                        <textarea id="story" placeholder="Ceritakan bagaimana perjuanganmu mendapatkan prestasi ini..." 
+                            class="w-full border border-gray-200 p-3 rounded-xl mt-1 h-32 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50"></textarea>
+                    </div>
+
+                    <button onclick="uploadPrestasi()" id="btnUpload"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-4 rounded-2xl shadow-lg shadow-blue-200 transition duration-200 active:scale-95">
+                        Kirim Prestasi Sekarang
+                    </button>
+
+                    <p id="msg" class="text-center font-medium mt-4"></p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co"
-        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I"
-        const _supabase = supabase.createClient(supabaseUrl, supabaseKey)
+        // 1. Konfigurasi Supabase
+        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I";
+        const _supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        const user = JSON.parse(localStorage.getItem("user"))
-        if(!user) { window.location.href = "login.html" }
-
-        document.getElementById("username").innerText = "Halo, " + user.name
-        document.getElementById("userPoints").innerText = user.points || 0
-
-        async function uploadPrestasi() {
-            const title = document.getElementById("pTitle").value
-            const cluster = document.getElementById("pCluster").value
-            const story = document.getElementById("pStory").value
-            const image = document.getElementById("pImage").value
-            const btn = document.getElementById("btnUpload")
-            const msg = document.getElementById("statusMsg")
-
-            if(!title || !story) return alert("Isi judul dan cerita dulu ya!")
-
-            btn.innerText = "Mengirim..."
-            btn.disabled = true
-
-            // Simpan ke tabel prestasi
-            const { error } = await _supabase.from("prestasi").insert([
-                { 
-                    title: title, 
-                    cluster: cluster, 
-                    story: story, 
-                    image: image,
-                    member_name: user.name,
-                    member_email: user.email
-                }
-            ])
-
-            if(error) {
-                msg.innerText = "Gagal upload: " + error.message
-                msg.className = "bg-red-100 text-red-600 p-3 rounded-lg block"
-            } else {
-                msg.innerText = "Berhasil! Prestasimu sudah tayang di Leaderboard."
-                msg.className = "bg-green-100 text-green-600 p-3 rounded-lg block"
-                // Reset form
-                document.getElementById("pTitle").value = ""
-                document.getElementById("pStory").value = ""
-            }
-            btn.innerText = "Kirim Prestasi"
-            btn.disabled = false
+        // 2. Ambil Data User yang Sedang Login
+        const user = JSON.parse(localStorage.getItem("user"));
+        if(!user) {
+            window.location.href = "login.html"; // Balik ke login kalau belum login
+        } else {
+            document.getElementById("welcomeUser").innerText = "Halo, " + user.name;
+            document.getElementById("displayPoints").innerText = user.points || 0;
         }
 
+        // 3. Fungsi Upload
+        async function uploadPrestasi() {
+            const title = document.getElementById("title").value;
+            const image = document.getElementById("image").value;
+            const cluster = document.getElementById("cluster").value;
+            const story = document.getElementById("story").value;
+            const msg = document.getElementById("msg");
+            const btn = document.getElementById("btnUpload");
+
+            if(!title || !story) {
+                alert("Isi judul dan ceritanya dulu ya!");
+                return;
+            }
+
+            msg.innerText = "Sabar, sedang mengirim data...";
+            msg.className = "text-center text-blue-500 mt-4";
+            btn.disabled = true;
+
+            try {
+                // Simpan ke tabel 'prestasi'
+                const { error } = await _supabase
+                    .from("prestasi")
+                    .insert([{
+                        title: title,
+                        image: image,
+                        cluster: cluster,
+                        story: story,
+                        member_name: user.name,
+                        member_email: user.email // Tambahkan ini agar filter data lebih mudah
+                    }]);
+
+                if(error) throw error;
+
+                // Logika Tambah Poin (Update di Database Members)
+                const currentPoints = parseInt(user.points || 0);
+                const updatedPoints = currentPoints + 50;
+
+                const { error: errorUpdate } = await _supabase
+                    .from("members")
+                    .update({ points: updatedPoints })
+                    .eq("id", user.id);
+
+                if(errorUpdate) throw errorUpdate;
+
+                // Update localStorage agar tampilan sinkron
+                user.points = updatedPoints;
+                localStorage.setItem("user", JSON.stringify(user));
+                document.getElementById("displayPoints").innerText = updatedPoints;
+
+                // Sukses
+                msg.innerText = "Yess! Prestasi berhasil diupload & Poin +50!";
+                msg.className = "text-center text-green-600 font-bold mt-4";
+                
+                // Reset Form
+                document.getElementById("title").value = "";
+                document.getElementById("image").value = "";
+                document.getElementById("story").value = "";
+
+            } catch (err) {
+                console.error(err);
+                msg.innerText = "Gagal upload: " + err.message;
+                msg.className = "text-center text-red-500 mt-4";
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // 4. Logout
         function logout() {
-            localStorage.removeItem("user")
-            window.location.href = "login.html"
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
         }
     </script>
 </body>
