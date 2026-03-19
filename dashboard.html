@@ -136,12 +136,77 @@
     </style>
 
     <script>
-    // Fungsi Kirim Prestasi
+    // 1. KONFIGURASI SUPABASE (Ganti Key-nya jika berbeda)
+    const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I";
+    const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // 2. CEK LOGIN & AMBIL DATA USER
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+        window.location.href = "login.html";
+    }
+
+    // 3. TAMPILKAN DATA IDENTITAS DI HEADER
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("userName").innerText = `Halo, ${user.name}`;
+        document.getElementById("userCluster").innerText = `Cluster: ${user.cluster || "Umum"}`;
+        document.getElementById("userPoints").innerText = user.points || 0;
+
+        // Tampilkan Menu Staff Jika Role Bukan Member
+        const roleLower = user.role.toLowerCase();
+        if (roleLower.includes('cda') || roleLower.includes('heg') || roleLower.includes('mbd') || roleLower.includes('korvoks')) {
+            document.getElementById("staff-only").classList.remove("hidden");
+        }
+    });
+
+    // 4. LOGIKA NAVIGASI TAB (SHOW/HIDE SECTION)
+    function showSection(sectionId) {
+        // Sembunyikan semua section
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.add('hidden');
+        });
+        
+        // Tampilkan section yang dipilih
+        document.getElementById('section-' + sectionId).classList.remove('hidden');
+
+        // Update styling tombol navigasi
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active', 'bg-blue-50', 'text-blue-600');
+            btn.querySelector('i').classList.replace('text-blue-600', 'text-gray-400');
+        });
+
+        // Set tombol yang aktif (Kecuali tombol Divisi Saya yang punya warna beda)
+        if (sectionId !== 'divisi-saya') {
+            event.currentTarget.classList.add('active', 'bg-blue-50', 'text-blue-600');
+            event.currentTarget.querySelector('i').classList.replace('text-gray-400', 'text-blue-600');
+        }
+    }
+
+    // 5. FUNGSI LOGOUT
+    function logout() {
+        if(confirm("Yakin ingin keluar?")) {
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
+        }
+    }
+
+    // 6. REDIRECT KE DASHBOARD KHUSUS STAFF
+    function goToStaffDashboard() {
+        const role = user.role.toLowerCase();
+        if (role.includes('cda')) window.location.href = "dashboard-cda.html";
+        else if (role.includes('mbd')) window.location.href = "dashboard-mbd.html";
+        else if (role.includes('heg')) window.location.href = "dashboard-heg.html";
+        else if (role.includes('korvoks')) window.location.href = "dashboard-korvoks.html";
+    }
+
+    // 7. FUNGSI SIMPAN PRESTASI (SUDAH ADA DI KODE KAMU - TINGGAL PASTIKAN TOMBOLNYA MEMANGGIL INI)
     async function savePrestasi() {
         const btn = event.target;
+        const originalText = btn.innerText;
         btn.innerText = "Mengirim...";
         btn.disabled = true;
-    
+
         const dataPrestasi = {
             email: user.email,
             nama_member: user.name,
@@ -154,38 +219,27 @@
             story: document.getElementById("pres-cerita").value,
             status: 'pending'
         };
-    
-        // Validasi sederhana
+
         if(!dataPrestasi.judul || !dataPrestasi.foto_url) {
             alert("Judul dan Foto wajib diisi!");
-            btn.innerText = "Unggah Sekarang";
+            btn.innerText = originalText;
             btn.disabled = false;
             return;
         }
-    
+
         const { error } = await _supabase.from("prestasi").insert([dataPrestasi]);
-    
+
         if (!error) {
-            // GONG: Kirim juga ke tabel kegiatan untuk FEED HOME
-            await _supabase.from("kegiatan").insert([{
-                judul: dataPrestasi.judul,
-                deskripsi: dataPrestasi.story,
-                kategori: 'prestasi',
-                gambar_url: dataPrestasi.foto_url,
-                nama_pelaku: user.name,
-                cluster: user.cluster
-            }]);
-    
-            alert("Berhasil! Prestasimu sudah masuk ke antrean verifikasi CDA.");
+            alert("GONG! Prestasimu berhasil dikirim ke CDA.");
             location.reload();
         } else {
-            alert("Gagal kirim: " + error.message);
-            btn.innerText = "Unggah Sekarang";
+            alert("Gagal: " + error.message);
+            btn.innerText = originalText;
             btn.disabled = false;
         }
     }
-    
-    // Fungsi Kirim Proyek
+
+    // 8. FUNGSI SIMPAN PROYEK (PASTIKAN TOMBOLNYA MEMANGGIL INI)
     async function saveProyek() {
         const dataProyek = {
             email_ketua: user.email,
@@ -195,20 +249,16 @@
             progres: 0,
             cluster_proyek: user.cluster
         };
-    
+
+        if(!dataProyek.nama_proyek) return alert("Nama proyek wajib diisi!");
+
         const { error } = await _supabase.from("proyek").insert([dataProyek]);
-    
+
         if (!error) {
-            await _supabase.from("kegiatan").insert([{
-                judul: "Proyek Baru: " + dataProyek.nama_proyek,
-                deskripsi: dataProyek.deskripsi,
-                kategori: 'proyek',
-                gambar_url: 'https://cdn-icons-png.flaticon.com/512/1087/1087815.png', // Ikon Default Proyek
-                nama_pelaku: user.name,
-                cluster: user.cluster
-            }]);
             alert("Proyek berhasil didaftarkan!");
             location.reload();
+        } else {
+            alert("Error: " + error.message);
         }
     }
     </script>
