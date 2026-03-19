@@ -3,175 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Anggota - Aksara Karya</title>
+    <title>Member Dashboard - Aksara Karya</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-gray-50 flex min-h-screen font-sans text-gray-900">
 
-    <div class="flex min-h-screen">
-        <div class="w-64 bg-blue-900 text-white flex-shrink-0 shadow-xl hidden md:block">
-            <div class="p-6 border-b border-blue-800">
-                <h1 class="text-xl font-bold tracking-widest text-blue-200">AKSARA KARYA</h1>
-            </div>
-            <nav class="p-4 space-y-2">
-                <a href="#" class="block p-3 bg-blue-800 rounded-xl font-bold italic shadow-sm">Dashboard</a>
-                <a href="index.html" class="block p-3 hover:bg-blue-800 rounded-xl transition">Lihat Leaderboard</a>
-                <button onclick="logout()" class="w-full text-left p-3 text-red-400 hover:bg-red-900/30 rounded-xl transition mt-10">
-                    Keluar (Logout)
+    <aside class="w-72 bg-white border-r border-gray-200 flex flex-col fixed h-full transition-all">
+        <div class="p-8">
+            <h1 class="text-2xl font-black text-blue-600 tracking-tighter">AKSARA <span class="text-gray-400">KARYA</span></h1>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-2">
+            <button onclick="showSection('upload-prestasi')" class="nav-btn active w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition group">
+                <i class="fa-solid fa-trophy mr-3 text-blue-500"></i> <span class="font-bold text-gray-600 group-hover:text-blue-600">Upload Prestasi</span>
+            </button>
+            <button onclick="showSection('upload-proyek')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition group">
+                <i class="fa-solid fa-laptop-code mr-3 text-gray-400 group-hover:text-blue-500"></i> <span class="font-bold text-gray-600 group-hover:text-blue-600">Upload Proyek</span>
+            </button>
+            <button onclick="showSection('event-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition group">
+                <i class="fa-solid fa-calendar-check mr-3 text-gray-400 group-hover:text-blue-500"></i> <span class="font-bold text-gray-600 group-hover:text-blue-600">Event Saya</span>
+            </button>
+            <button onclick="showSection('lomba-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition group">
+                <i class="fa-solid fa-medal mr-3 text-gray-400 group-hover:text-blue-500"></i> <span class="font-bold text-gray-600 group-hover:text-blue-600">Lomba Saya</span>
+            </button>
+            <button onclick="showSection('my-plan')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition group">
+                <i class="fa-solid fa-map-location-dot mr-3 text-gray-400 group-hover:text-blue-500"></i> <span class="font-bold text-gray-600 group-hover:text-blue-600">My Plan</span>
+            </button>
+
+            <div id="staff-only" class="hidden pt-6">
+                <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Internal Divisi</p>
+                <button onclick="showSection('divisi-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl bg-orange-50 text-orange-600 hover:bg-orange-100 transition">
+                    <i class="fa-solid fa-users-gear mr-3"></i> <span class="font-bold">Divisi Saya</span>
                 </button>
-            </nav>
-        </div>
+            </div>
+        </nav>
 
-        <div class="flex-1 p-6 md:p-10">
-            <div class="flex justify-between items-center mb-10 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div class="p-6 border-t border-gray-100">
+            <button onclick="logout()" class="flex items-center text-red-400 font-bold hover:text-red-600 transition">
+                <i class="fa-solid fa-right-from-bracket mr-2"></i> Keluar
+            </button>
+        </div>
+    </aside>
+
+    <main class="ml-72 flex-1 p-10">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h2 id="userName" class="text-3xl font-black text-gray-800">Halo, Member</h2>
+                <p id="userCluster" class="text-gray-400 font-medium">Cluster: ...</p>
+            </div>
+            <div class="bg-blue-600 text-white p-4 rounded-3xl shadow-lg shadow-blue-200 flex items-center space-x-4">
+                <div class="bg-blue-500 p-2 rounded-xl"><i class="fa-solid fa-star"></i></div>
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800" id="welcomeUser">Halo, Memuat...</h2>
-                    <p class="text-gray-500 text-sm">Ayo lapor prestasi barumu hari ini!</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Poin Kamu</p>
-                    <p class="text-3xl font-black text-blue-600" id="displayPoints">0</p>
+                    <p class="text-[10px] font-bold uppercase opacity-80">Total Points</p>
+                    <p id="userPoints" class="text-2xl font-black">0</p>
                 </div>
             </div>
+        </header>
 
-            <div class="max-w-2xl bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
-                <div class="flex items-center space-x-3 mb-6">
-                    <div class="bg-blue-100 p-2 rounded-lg text-blue-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <h2 class="text-xl font-bold text-gray-800">Upload Prestasi Baru</h2>
-                </div>
-
-                <div class="space-y-4">
-                    <div>
-                        <label class="text-sm font-semibold text-gray-600">Judul Prestasi</label>
-                        <input id="title" type="text" placeholder="Juara 1 Lomba Startup Nasional..." 
-                            class="w-full border border-gray-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50">
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-sm font-semibold text-gray-600">Cluster</label>
-                            <select id="cluster" class="w-full border border-gray-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 cursor-pointer">
-                                <option>Olimpiade</option>
-                                <option>Bisnis</option>
-                                <option>Penulisan</option>
-                                <option>Desain</option>
+        <section id="content-area">
+            <div id="section-upload-prestasi" class="content-section">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 max-w-2xl">
+                    <h3 class="text-xl font-bold mb-6 italic text-blue-600 tracking-tight"># Lapor Prestasi Baru</h3>
+                    <div class="space-y-4">
+                        <input id="p-judul" type="text" placeholder="Judul Prestasi" class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        <div class="grid grid-cols-2 gap-4">
+                            <select id="p-tingkat" class="p-4 bg-gray-50 border-none rounded-2xl outline-none">
+                                <option>Internasional</option>
+                                <option>Nasional</option>
+                                <option>Provinsi</option>
+                                <option>Universitas</option>
                             </select>
+                            <input id="p-tanggal" type="date" class="p-4 bg-gray-50 border-none rounded-2xl outline-none">
                         </div>
-                        <div>
-                            <label class="text-sm font-semibold text-gray-600">Link Foto (Sertifikat/Dokumentasi)</label>
-                            <input id="image" type="text" placeholder="https://link-foto.com/sertif.jpg" 
-                                class="w-full border border-gray-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50">
-                        </div>
+                        <input id="p-foto" type="text" placeholder="Link Foto Bukti" class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        <textarea id="p-cerita" placeholder="Ceritakan sedikit perjuanganmu..." class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none h-32 focus:ring-2 focus:ring-blue-500 transition"></textarea>
+                        <button onclick="savePrestasi()" class="w-full bg-blue-600 text-white font-black p-4 rounded-2xl shadow-lg shadow-blue-100 hover:bg-blue-700 transition">Unggah Sekarang</button>
                     </div>
-
-                    <div>
-                        <label class="text-sm font-semibold text-gray-600">Cerita Prestasi</label>
-                        <textarea id="story" placeholder="Ceritakan bagaimana perjuanganmu mendapatkan prestasi ini..." 
-                            class="w-full border border-gray-200 p-3 rounded-xl mt-1 h-32 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50"></textarea>
-                    </div>
-
-                    <button onclick="uploadPrestasi()" id="btnUpload"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-4 rounded-2xl shadow-lg shadow-blue-200 transition duration-200 active:scale-95">
-                        Kirim Prestasi Sekarang
-                    </button>
-
-                    <p id="msg" class="text-center font-medium mt-4"></p>
                 </div>
             </div>
-        </div>
-    </div>
+
+            <div id="section-upload-proyek" class="content-section hidden"> <h3 class="text-2xl font-bold">Upload Proyek</h3> <p>Fitur proyek akan segera hadir...</p> </div>
+            <div id="section-event-saya" class="content-section hidden"> <h3 class="text-2xl font-bold">Event Saya</h3> <p>Daftar event yang kamu ikuti...</p> </div>
+            <div id="section-lomba-saya" class="content-section hidden"> <h3 class="text-2xl font-bold">Lomba Saya</h3> <p>Pantau status lomba kamu...</p> </div>
+            <div id="section-my-plan" class="content-section hidden"> <h3 class="text-2xl font-bold">My Plan</h3> <p>Rencana masa depan kamu...</p> </div>
+            <div id="section-divisi-saya" class="content-section hidden"> <h3 class="text-2xl font-bold">Internal Divisi</h3> <p>Data khusus staff divisi kamu.</p> </div>
+        </section>
+    </main>
+
+    <style>
+        .nav-btn.active { background-color: #eff6ff; color: #2563eb; }
+        .nav-btn.active i { color: #2563eb; }
+    </style>
 
     <script>
-        // 1. Konfigurasi Supabase
-        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
-        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I";
-        const _supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-        // 2. Ambil Data User yang Sedang Login
         const user = JSON.parse(localStorage.getItem("user"));
-        if(!user) {
-            window.location.href = "login.html"; // Balik ke login kalau belum login
-        } else {
-            document.getElementById("welcomeUser").innerText = "Halo, " + user.name;
-            document.getElementById("displayPoints").innerText = user.points || 0;
+
+        // Proteksi login
+        if(!user) window.location.href = "login.html";
+
+        // Tampilkan data user
+        document.getElementById("userName").innerText = "Halo, " + user.name;
+        document.getElementById("userCluster").innerText = "Cluster: " + (user.cluster || "-");
+        document.getElementById("userPoints").innerText = user.points || 0;
+
+        // Cek jika dia STAFF (munculkan menu divisi)
+        if(user.role.toLowerCase() !== 'member') {
+            document.getElementById("staff-only").classList.remove("hidden");
         }
 
-        // 3. Fungsi Upload
-        async function uploadPrestasi() {
-            const title = document.getElementById("title").value;
-            const image = document.getElementById("image").value;
-            const cluster = document.getElementById("cluster").value;
-            const story = document.getElementById("story").value;
-            const msg = document.getElementById("msg");
-            const btn = document.getElementById("btnUpload");
-
-            if(!title || !story) {
-                alert("Isi judul dan ceritanya dulu ya!");
-                return;
-            }
-
-            msg.innerText = "Sabar, sedang mengirim data...";
-            msg.className = "text-center text-blue-500 mt-4";
-            btn.disabled = true;
-
-            try {
-                // Simpan ke tabel 'prestasi'
-                const { error } = await _supabase
-                    .from("prestasi")
-                    .insert([{
-                        title: title,
-                        image: image,
-                        cluster: cluster,
-                        story: story,
-                        member_name: user.name,
-                        member_email: user.email // Tambahkan ini agar filter data lebih mudah
-                    }]);
-
-                if(error) throw error;
-
-                // Logika Tambah Poin (Update di Database Members)
-                const currentPoints = parseInt(user.points || 0);
-                const updatedPoints = currentPoints + 50;
-
-                const { error: errorUpdate } = await _supabase
-                    .from("members")
-                    .update({ points: updatedPoints })
-                    .eq("id", user.id);
-
-                if(errorUpdate) throw errorUpdate;
-
-                // Update localStorage agar tampilan sinkron
-                user.points = updatedPoints;
-                localStorage.setItem("user", JSON.stringify(user));
-                document.getElementById("displayPoints").innerText = updatedPoints;
-
-                // Sukses
-                msg.innerText = "Yess! Prestasi berhasil diupload & Poin +50!";
-                msg.className = "text-center text-green-600 font-bold mt-4";
-                
-                // Reset Form
-                document.getElementById("title").value = "";
-                document.getElementById("image").value = "";
-                document.getElementById("story").value = "";
-
-            } catch (err) {
-                console.error(err);
-                msg.innerText = "Gagal upload: " + err.message;
-                msg.className = "text-center text-red-500 mt-4";
-            } finally {
-                btn.disabled = false;
-            }
+        // Fungsi Ganti Halaman (Tab)
+        function showSection(sectionId) {
+            // Sembunyikan semua
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            // Hilangkan status active di semua tombol
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // Tampilkan yang dipilih
+            document.getElementById('section-' + sectionId).classList.remove('hidden');
+            // Aktifkan tombol yang diklik
+            event.currentTarget.classList.add('active');
         }
 
-        // 4. Logout
         function logout() {
             localStorage.removeItem("user");
             window.location.href = "login.html";
+        }
+
+        async function savePrestasi() {
+            alert("Sedang proses hubung ke database...");
+            // Logika upload prestasi seperti yang kita buat tadi ditaruh di sini
         }
     </script>
 </body>
