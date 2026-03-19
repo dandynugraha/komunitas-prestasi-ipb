@@ -1,33 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Komunitas Prestasi IPB</title>
+    <title>Komunitas Prestasi IPB</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
-<script>
-
-async function testConnection(){
-
-const { data, error } = await supabase
-.from("members")
-.select("*")
-
-console.log(data)
-
-}
-
-testConnection()
-
-</script>
-  
 <body>
 
-<h1>Website Komunitas Prestasi IPB</h1>
+    <h1>Website Komunitas Prestasi IPB</h1>
+    <p>Website sedang dikembangkan.</p>
 
-<p>Website sedang dikembangkan.</p>
-  
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="js/supabase.js"></script>
+    <script>
+        // 2. Inisialisasi Koneksi
+        const supabaseUrl = 'https://fofgkmqpvovbocjzjrfg.supabase.co'
+        const supabaseKey = 'sb_publishable_zirL9ncK9SCs8zxXOFq1pQ_ZNPM5eJc'
+        
+        // Gunakan cara panggil yang benar untuk versi CDN
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+
+        async function testConnection() {
+            console.log("Sedang mencoba menyambung...");
+            
+            const { data, error } = await supabaseClient
+                .from("members")
+                .select("*")
+
+            if (error) {
+                console.error("Error nih:", error.message)
+            } else {
+                console.log("Koneksi Berhasil! Data dari tabel members:", data)
+            }
+        }
+
+        // 3. Jalankan fungsi
+        testConnection()
+    </script>
 </body>
-
 </html>
