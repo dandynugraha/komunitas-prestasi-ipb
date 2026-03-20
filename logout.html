@@ -1,10 +1,52 @@
-<script src="https://cdn.tailwindcss.com"></script>
-<body class="flex items-center justify-center h-screen bg-gray-900/50 backdrop-blur-sm">
-    <div class="bg-white p-10 rounded-[3rem] text-center shadow-2xl">
-        <h2 class="text-2xl font-black mb-4">Kamu Yakin Keluar Akun?</h2>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout - Aksara Karya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-900/60 backdrop-blur-md">
+
+    <div class="bg-white p-10 rounded-[3rem] text-center shadow-2xl max-w-sm w-full mx-4 section-animate">
+        <div class="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </div>
+        
+        <h2 class="text-2xl font-black text-gray-800 mb-2">Keluar Akun?</h2>
+        <p class="text-gray-400 mb-8">Kamu akan diarahkan kembali ke halaman utama proyek GitHub.</p>
+        
         <div class="flex space-x-4">
-            <button onclick="location.href='login.html'" class="flex-1 bg-red-600 text-white p-4 rounded-2xl font-bold">Iya</button>
-            <button onclick="window.history.back()" class="flex-1 bg-gray-100 text-gray-500 p-4 rounded-2xl font-bold">Tidak</button>
+            <button onclick="handleLogout()" class="flex-1 bg-red-600 hover:bg-red-700 text-white p-4 rounded-2xl font-bold shadow-lg shadow-red-100 transition-all active:scale-95">
+                Iya, Keluar
+            </button>
+            
+            <button onclick="window.history.back()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-500 p-4 rounded-2xl font-bold transition-all active:scale-95">
+                Tidak
+            </button>
         </div>
     </div>
+
+    <script>
+        function handleLogout() {
+            // 1. Bersihkan data login dari browser
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // 2. Arahkan ke link GitHub yang diminta
+            window.location.href = "https://github.com/dandynugraha/komunitas-prestasi-ipb";
+        }
+    </script>
+
+    <style>
+        .section-animate {
+            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
 </body>
+</html>
