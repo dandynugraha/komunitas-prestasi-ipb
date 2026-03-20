@@ -7,10 +7,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .form-input { @apply w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition; }
+        .btn-primary { @apply w-full text-white font-black p-4 rounded-2xl shadow-lg transition active:scale-95 bg-blue-600 hover:bg-blue-700 shadow-blue-100; }
+        .nav-btn.active { @apply bg-blue-50 text-blue-600 shadow-sm; }
+        .nav-btn.active i { @apply text-blue-600; }
+        .nav-btn.active span { @apply text-blue-600; }
+    </style>
 </head>
 <body class="bg-gray-50 flex min-h-screen font-sans text-gray-900">
 
-    <aside class="w-72 bg-white border-r border-gray-200 flex flex-col fixed h-full shadow-sm">
+    <aside class="w-72 bg-white border-r border-gray-200 flex flex-col fixed h-full shadow-sm z-50">
         <div class="p-8">
             <h1 class="text-2xl font-black text-blue-600 tracking-tighter">AKSARA <span class="text-gray-400">KARYA</span></h1>
         </div>
@@ -32,9 +39,9 @@
                 <i class="fa-solid fa-map-location-dot mr-3 text-gray-400 w-6"></i> <span class="font-bold text-gray-600">My Plan</span>
             </button>
 
-            <div id="staff-only" class="hidden pt-6">
+            <div id="staff-only" class="hidden pt-6 border-t border-gray-50 mt-4">
                 <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Internal Divisi</p>
-                <button onclick="showSection('divisi-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl bg-orange-50 text-orange-600 hover:bg-orange-100 transition">
+                <button onclick="goToStaffDashboard()" class="w-full flex items-center p-3 rounded-2xl bg-orange-50 text-orange-600 hover:bg-orange-100 transition">
                     <i class="fa-solid fa-users-gear mr-3 w-6"></i> <span class="font-bold">Divisi Saya</span>
                 </button>
             </div>
@@ -51,12 +58,12 @@
         <header class="flex justify-between items-center mb-10">
             <div>
                 <h2 id="userName" class="text-3xl font-black text-gray-800 tracking-tight italic">Halo, ...</h2>
-                <p id="userCluster" class="text-gray-400 font-medium">Memuat info...</p>
+                <p id="userCluster" class="text-gray-400 font-medium tracking-wide uppercase text-xs mt-1">Memuat info...</p>
             </div>
             <div class="bg-blue-600 text-white p-5 rounded-[2rem] shadow-xl shadow-blue-100 flex items-center space-x-6">
                 <div class="bg-blue-500/50 p-3 rounded-2xl text-2xl"><i class="fa-solid fa-star"></i></div>
                 <div>
-                    <p class="text-xs font-bold uppercase opacity-70 tracking-widest">Points</p>
+                    <p class="text-xs font-bold uppercase opacity-70 tracking-widest">Total Points</p>
                     <p id="userPoints" class="text-3xl font-black tracking-tighter">0</p>
                 </div>
             </div>
@@ -68,18 +75,20 @@
                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                     <h3 class="text-xl font-bold mb-6 italic text-blue-600 tracking-tight"># Lapor Prestasi Baru</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input id="pres-judul" placeholder="Judul Prestasi" class="form-input">
-                        <select id="pres-juara" class="form-input">
+                        <input id="pres-judul" placeholder="Judul Prestasi / Lomba" class="form-input bg-gray-50 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500">
+                        <select id="pres-juara" class="form-input bg-gray-50 p-4 rounded-2xl outline-none">
+                            <option value="">Pilih Juara</option>
                             <option>Juara 1</option><option>Juara 2</option><option>Juara 3</option><option>Harapan</option><option>Finalis</option>
                         </select>
-                        <select id="pres-tingkat" class="form-input">
+                        <select id="pres-tingkat" class="form-input bg-gray-50 p-4 rounded-2xl outline-none">
+                            <option value="">Pilih Tingkat</option>
                             <option>Internasional</option><option>Nasional</option><option>Provinsi</option><option>Universitas</option>
                         </select>
-                        <input id="pres-tanggal" type="date" class="form-input">
-                        <input id="pres-foto" placeholder="Link Foto Bukti" class="form-input md:col-span-2">
-                        <textarea id="pres-cerita" placeholder="Ceritakan pengalamanmu..." class="form-input md:col-span-2 h-32"></textarea>
+                        <input id="pres-tanggal" type="date" class="form-input bg-gray-50 p-4 rounded-2xl outline-none">
+                        <input id="pres-foto" placeholder="Link Foto Bukti (G-Drive/Imgur)" class="form-input md:col-span-2 bg-gray-50 p-4 rounded-2xl outline-none">
+                        <textarea id="pres-cerita" placeholder="Bagaimana perjuanganmu di lomba ini? (Akan muncul di News Feed Home)" class="form-input md:col-span-2 h-32 bg-gray-50 p-4 rounded-2xl outline-none"></textarea>
                     </div>
-                    <button onclick="saveGeneric('prestasi')" class="btn-primary mt-6">Kirim Laporan</button>
+                    <button onclick="savePrestasi()" class="btn-primary mt-6 bg-blue-600 text-white p-4 rounded-2xl w-full font-bold">Kirim Laporan</button>
                 </div>
             </div>
 
@@ -87,180 +96,164 @@
                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                     <h3 class="text-xl font-bold mb-6 italic text-purple-600 tracking-tight"># Upload Proyek / Portofolio</h3>
                     <div class="grid grid-cols-1 gap-4">
-                        <input id="pro-nama" placeholder="Nama Proyek (Contoh: Desain Web Aksara)" class="form-input">
-                        <input id="pro-link" placeholder="Link Proyek (Github/Behance/Drive)" class="form-input">
-                        <textarea id="pro-desc" placeholder="Deskripsi singkat proyek..." class="form-input h-32"></textarea>
+                        <input id="pro-nama" placeholder="Nama Proyek (Contoh: UI/UX App Aksara)" class="form-input bg-gray-50 p-4 rounded-2xl outline-none">
+                        <input id="pro-link" placeholder="Link Proyek (Github/Behance/Drive)" class="form-input bg-gray-50 p-4 rounded-2xl outline-none">
+                        <textarea id="pro-desc" placeholder="Jelaskan secara singkat tujuan proyek ini..." class="form-input h-32 bg-gray-50 p-4 rounded-2xl outline-none"></textarea>
                     </div>
-                    <button onclick="saveGeneric('proyek')" class="btn-primary bg-purple-600 hover:bg-purple-700 mt-6 shadow-purple-100">Simpan Proyek</button>
+                    <button onclick="saveProyek()" class="btn-primary bg-purple-600 hover:bg-purple-700 mt-6 shadow-purple-100 text-white p-4 rounded-2xl w-full font-bold">Simpan Proyek</button>
                 </div>
             </div>
 
             <div id="section-event-saya" class="content-section hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="list-event">
-                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm opacity-50 italic">Belum ada event yang diikuti.</div>
+                <div class="bg-white p-10 rounded-3xl border border-gray-100 text-center">
+                    <i class="fa-solid fa-calendar-day text-4xl text-gray-200 mb-4"></i>
+                    <p class="text-gray-400 italic">Kamu belum terdaftar di event manapun bulan ini.</p>
                 </div>
             </div>
 
             <div id="section-lomba-saya" class="content-section hidden">
                 <div class="bg-white p-8 rounded-3xl border border-gray-100">
-                    <h3 class="font-bold mb-4">Tracking Lomba Kamu</h3>
-                    <p class="text-gray-400">Fitur tracking progress lomba sedang dikembangkan.</p>
+                    <h3 class="font-bold mb-4">Tracking Progress Lomba</h3>
+                    <p class="text-sm text-gray-500">Fitur ini membantu kamu mencatat tahapan lomba (Pendaftaran -> Semifinal -> Final).</p>
+                    <div class="mt-6 p-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-center text-gray-400">
+                        Coming Soon!
+                    </div>
                 </div>
             </div>
 
             <div id="section-my-plan" class="content-section hidden">
                 <div class="bg-white p-8 rounded-3xl border border-gray-100">
-                    <h3 class="text-xl font-bold mb-6">🎯 My Growth Plan</h3>
-                    <textarea class="form-input h-64 mb-4" placeholder="Tuliskan targetmu semester ini (Misal: Ikut 3 Lomba, Belajar Figma, dll)"></textarea>
-                    <button class="btn-primary bg-green-600 hover:bg-green-700 shadow-green-100">Simpan Rencana</button>
-                </div>
-            </div>
-
-            <div id="section-divisi-saya" class="content-section hidden">
-                <div class="bg-orange-50 p-8 rounded-3xl border border-orange-100 text-orange-800">
-                    <h3 class="text-2xl font-black mb-4 uppercase italic">Internal Divisi Panel</h3>
-                    <p class="font-bold">Selamat datang staff! Gunakan panel ini untuk mengelola anggota clustermu.</p>
-                    <button onclick="goToStaffDashboard()" class="mt-6 bg-orange-600 text-white px-6 py-3 rounded-2xl font-bold">Buka Panel Tracking</button>
+                    <h3 class="text-xl font-bold mb-2">🎯 My Growth Plan</h3>
+                    <p class="text-sm text-gray-500 mb-6">Tulis mimpimu semester ini, mari kita wujudkan bersama.</p>
+                    <textarea class="form-input h-64 mb-4 bg-gray-50 p-4 rounded-2xl outline-none" placeholder="Contoh: Semester ini saya ingin menang LKTIN Nasional dan menguasai Adobe Illustrator..."></textarea>
+                    <button class="btn-primary bg-green-600 hover:bg-green-700 shadow-green-100 text-white p-4 rounded-2xl w-full font-bold">Simpan Rencana</button>
                 </div>
             </div>
 
         </div>
     </main>
 
-    <style>
-        .form-input { @apply w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition; }
-        .btn-primary { @apply w-full text-white font-black p-4 rounded-2xl shadow-lg transition active:scale-95 bg-blue-600 hover:bg-blue-700 shadow-blue-100; }
-        .nav-btn.active { @apply bg-blue-50 text-blue-600 shadow-sm; }
-        .nav-btn.active i { @apply text-blue-600; }
-        .nav-btn.active span { @apply text-blue-600; }
-    </style>
-
     <script>
-    // 1. KONFIGURASI SUPABASE (Ganti Key-nya jika berbeda)
-    const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I";
-    const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // 1. INITIALIZE SUPABASE
+        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I";
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    // 2. CEK LOGIN & AMBIL DATA USER
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) {
-        window.location.href = "login.html";
-    }
-
-    // 3. TAMPILKAN DATA IDENTITAS DI HEADER
-    document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("userName").innerText = `Halo, ${user.name}`;
-        document.getElementById("userCluster").innerText = `Cluster: ${user.cluster || "Umum"}`;
-        document.getElementById("userPoints").innerText = user.points || 0;
-
-        // Tampilkan Menu Staff Jika Role Bukan Member
-        const roleLower = user.role.toLowerCase();
-        if (roleLower.includes('cda') || roleLower.includes('heg') || roleLower.includes('mbd') || roleLower.includes('korvoks')) {
-            document.getElementById("staff-only").classList.remove("hidden");
-        }
-    });
-
-    // 4. LOGIKA NAVIGASI TAB (SHOW/HIDE SECTION)
-    function showSection(sectionId) {
-        // Sembunyikan semua section
-        document.querySelectorAll('.content-section').forEach(section => {
-            section.classList.add('hidden');
-        });
-        
-        // Tampilkan section yang dipilih
-        document.getElementById('section-' + sectionId).classList.remove('hidden');
-
-        // Update styling tombol navigasi
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.classList.remove('active', 'bg-blue-50', 'text-blue-600');
-            btn.querySelector('i').classList.replace('text-blue-600', 'text-gray-400');
-        });
-
-        // Set tombol yang aktif (Kecuali tombol Divisi Saya yang punya warna beda)
-        if (sectionId !== 'divisi-saya') {
-            event.currentTarget.classList.add('active', 'bg-blue-50', 'text-blue-600');
-            event.currentTarget.querySelector('i').classList.replace('text-gray-400', 'text-blue-600');
-        }
-    }
-
-    // 5. FUNGSI LOGOUT
-    function logout() {
-        if(confirm("Yakin ingin keluar?")) {
-            localStorage.removeItem("user");
+        // 2. AUTH CHECK
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user) {
             window.location.href = "login.html";
         }
-    }
 
-    // 6. REDIRECT KE DASHBOARD KHUSUS STAFF
-    function goToStaffDashboard() {
-        const role = user.role.toLowerCase();
-        if (role.includes('cda')) window.location.href = "dashboard-cda.html";
-        else if (role.includes('mbd')) window.location.href = "dashboard-mbd.html";
-        else if (role.includes('heg')) window.location.href = "dashboard-heg.html";
-        else if (role.includes('korvoks')) window.location.href = "dashboard-korvoks.html";
-    }
+        // 3. PAGE SETUP
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("userName").innerText = `Halo, ${user.name}`;
+            document.getElementById("userCluster").innerText = `Cluster: ${user.cluster || "Umum"}`;
+            document.getElementById("userPoints").innerText = user.points || 0;
 
-    // 7. FUNGSI SIMPAN PRESTASI (SUDAH ADA DI KODE KAMU - TINGGAL PASTIKAN TOMBOLNYA MEMANGGIL INI)
-    async function savePrestasi() {
-        const btn = event.target;
-        const originalText = btn.innerText;
-        btn.innerText = "Mengirim...";
-        btn.disabled = true;
+            const roleLower = user.role.toLowerCase();
+            if (roleLower.includes('cda') || roleLower.includes('heg') || roleLower.includes('mbd') || roleLower.includes('korvoks')) {
+                document.getElementById("staff-only").classList.remove("hidden");
+            }
+        });
 
-        const dataPrestasi = {
-            email: user.email,
-            nama_member: user.name,
-            cluster: user.cluster,
-            judul: document.getElementById("pres-judul").value,
-            juara: document.getElementById("pres-juara").value,
-            tingkat: document.getElementById("pres-tingkat").value,
-            tanggal_lomba: document.getElementById("pres-tanggal").value,
-            foto_url: document.getElementById("pres-foto").value,
-            story: document.getElementById("pres-cerita").value,
-            status: 'pending'
-        };
+        // 4. NAV LOGIC (ANTI-STUCK)
+        function showSection(sectionId) {
+            // Sembunyikan semua section
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            
+            // Tampilkan section target
+            const target = document.getElementById('section-' + sectionId);
+            if(target) target.classList.remove('hidden');
 
-        if(!dataPrestasi.judul || !dataPrestasi.foto_url) {
-            alert("Judul dan Foto wajib diisi!");
-            btn.innerText = originalText;
-            btn.disabled = false;
-            return;
+            // Reset tombol navigasi
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-blue-50', 'text-blue-600');
+                const icon = btn.querySelector('i');
+                if(icon) icon.classList.replace('text-blue-600', 'text-gray-400');
+            });
+
+            // Highlight tombol yang diklik
+            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(sectionId));
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-blue-50', 'text-blue-600');
+                const icon = activeBtn.querySelector('i');
+                if(icon) icon.classList.replace('text-gray-400', 'text-blue-600');
+            }
         }
 
-        const { error } = await _supabase.from("prestasi").insert([dataPrestasi]);
+        // 5. SAVE PRESTASI
+        async function savePrestasi() {
+            const btn = event.target;
+            const originalText = btn.innerText;
 
-        if (!error) {
-            alert("GONG! Prestasimu berhasil dikirim ke CDA.");
-            location.reload();
-        } else {
-            alert("Gagal: " + error.message);
-            btn.innerText = originalText;
-            btn.disabled = false;
+            const data = {
+                email: user.email,
+                nama_member: user.name,
+                cluster: user.cluster,
+                judul: document.getElementById("pres-judul").value,
+                juara: document.getElementById("pres-juara").value,
+                tingkat: document.getElementById("pres-tingkat").value,
+                tanggal_lomba: document.getElementById("pres-tanggal").value,
+                foto_url: document.getElementById("pres-foto").value,
+                story: document.getElementById("pres-cerita").value,
+                status: 'pending'
+            };
+
+            if(!data.judul || !data.foto_url) return alert("Wajib isi Judul dan Foto!");
+
+            btn.innerText = "Mengirim...";
+            btn.disabled = true;
+
+            const { error } = await _supabase.from("prestasi").insert([data]);
+
+            if (!error) {
+                alert("🚀 GONG! Prestasimu berhasil dikirim. Tunggu verifikasi CDA ya!");
+                location.reload();
+            } else {
+                alert("Error: " + error.message);
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
         }
-    }
 
-    // 8. FUNGSI SIMPAN PROYEK (PASTIKAN TOMBOLNYA MEMANGGIL INI)
-    async function saveProyek() {
-        const dataProyek = {
-            email_ketua: user.email,
-            nama_proyek: document.getElementById("pro-nama").value,
-            link_proyek: document.getElementById("pro-link").value,
-            deskripsi: document.getElementById("pro-desc").value,
-            progres: 0,
-            cluster_proyek: user.cluster
-        };
+        // 6. SAVE PROYEK
+        async function saveProyek() {
+            const data = {
+                email_ketua: user.email,
+                nama_proyek: document.getElementById("pro-nama").value,
+                link_proyek: document.getElementById("pro-link").value,
+                deskripsi: document.getElementById("pro-desc").value,
+                progres: 0,
+                cluster_proyek: user.cluster
+            };
 
-        if(!dataProyek.nama_proyek) return alert("Nama proyek wajib diisi!");
+            if(!data.nama_proyek) return alert("Nama proyek wajib diisi!");
 
-        const { error } = await _supabase.from("proyek").insert([dataProyek]);
+            const { error } = await _supabase.from("proyek").insert([data]);
 
-        if (!error) {
-            alert("Proyek berhasil didaftarkan!");
-            location.reload();
-        } else {
-            alert("Error: " + error.message);
+            if (!error) {
+                alert("Proyek berhasil didaftarkan!");
+                location.reload();
+            } else {
+                alert("Error: " + error.message);
+            }
         }
-    }
+
+        function logout() {
+            if(confirm("Yakin ingin keluar?")) {
+                localStorage.removeItem("user");
+                window.location.href = "login.html";
+            }
+        }
+
+        function goToStaffDashboard() {
+            const role = user.role.toLowerCase();
+            if (role.includes('cda')) window.location.href = "dashboard-cda.html";
+            else if (role.includes('mbd')) window.location.href = "dashboard-mbd.html";
+            else if (role.includes('heg')) window.location.href = "dashboard-heg.html";
+            else if (role.includes('korvoks')) window.location.href = "dashboard-korvoks.html";
+        }
     </script>
 </body>
 </html>
