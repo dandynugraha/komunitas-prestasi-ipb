@@ -1,0 +1,26 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<body class="p-10 bg-[#F8FAFC]">
+    <div class="max-w-4xl bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
+        <h2 class="text-2xl font-black text-blue-900 mb-8"><i class="fa-solid fa-trophy mr-3"></i> Lapor Prestasi Baru</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <input id="foto" placeholder="Link Foto Landscape (Bukti)" class="md:col-span-2 p-4 bg-gray-50 rounded-2xl outline-none border border-gray-100">
+            <input id="title" placeholder="Title Prestasi" class="p-4 bg-gray-50 rounded-2xl outline-none border border-gray-100">
+            <input type="date" class="p-4 bg-gray-50 rounded-2xl outline-none border border-gray-100">
+            <select class="p-4 bg-gray-50 rounded-2xl outline-none border border-gray-100">
+                <option>Internasional</option><option>Nasional</option><option>Provinsi</option>
+            </select>
+            <select id="metode" onchange="updatePlaceholder()" class="p-4 bg-gray-50 rounded-2xl outline-none border border-gray-100">
+                <option value="offline">Offline</option><option value="online">Online</option><option value="hybrid">Hybrid</option>
+            </select>
+            <input id="lokasi" placeholder="Nama Tempat" class="md:col-span-2 p-4 bg-gray-50 rounded-2xl outline-none border border-gray-100">
+            <textarea placeholder="Story Telling (Pengalamanmu)" class="md:col-span-2 h-40 p-4 bg-gray-50 rounded-2xl outline-none border border-gray-100"></textarea>
+        </div>
+        <button class="w-full mt-8 bg-blue-600 text-white p-5 rounded-2xl font-black shadow-lg shadow-blue-100 transition hover:scale-105">Upload & Publish</button>
+    </div>
+    <script>
+        function updatePlaceholder() {
+            const m = document.getElementById('metode').value;
+            document.getElementById('lokasi').placeholder = (m === 'offline') ? "Nama Tempat" : "Nama Platform (Zoom/Web)";
+        }
+    </script>
+</body>
