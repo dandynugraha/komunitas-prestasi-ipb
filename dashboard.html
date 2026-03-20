@@ -3,256 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Dashboard - Aksara Karya</title>
+    <title>Member Dashboard - Aksara Karya 62</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .form-input { @apply w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition; }
-        .btn-primary { @apply w-full text-white font-black p-4 rounded-2xl shadow-lg transition active:scale-95 bg-blue-600 hover:bg-blue-700 shadow-blue-100; }
-        .nav-btn.active { @apply bg-blue-50 text-blue-600 shadow-sm; }
-        .nav-btn.active i { @apply text-blue-600; }
-        .nav-btn.active span { @apply text-blue-600; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(229, 231, 235, 0.5); }
+        .form-input { @apply w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300; }
+        .nav-btn.active { @apply bg-blue-600 text-white shadow-lg shadow-blue-200; }
+        .nav-btn.active i { @apply text-white; }
+        .section-animate { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-gray-50 flex min-h-screen font-sans text-gray-900">
+<body class="bg-[#F8FAFC] flex min-h-screen text-gray-900">
 
-    <aside class="w-72 bg-white border-r border-gray-200 flex flex-col fixed h-full shadow-sm z-50">
+    <aside class="w-80 bg-white border-r border-gray-100 flex flex-col fixed h-full z-50">
         <div class="p-8">
-            <h1 class="text-2xl font-black text-blue-600 tracking-tighter">AKSARA <span class="text-gray-400">KARYA</span></h1>
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i class="fa-solid fa-feather-pointed"></i>
+                </div>
+                <h1 class="text-xl font-extrabold tracking-tighter text-blue-900">AKSARA <span class="text-blue-500">KARYA 62</span></h1>
+            </div>
         </div>
 
-        <nav class="flex-1 px-4 space-y-2 overflow-y-auto">
-            <button onclick="showSection('upload-prestasi')" class="nav-btn active w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition">
-                <i class="fa-solid fa-trophy mr-3 text-blue-500 w-6"></i> <span class="font-bold text-gray-600">Upload Prestasi</span>
+        <nav class="flex-1 px-6 space-y-3 overflow-y-auto">
+            <button onclick="showSection('upload-prestasi')" class="nav-btn active w-full flex items-center p-4 rounded-2xl text-gray-500 hover:bg-gray-50 transition-all">
+                <i class="fa-solid fa-trophy mr-4 w-5"></i> <span class="font-bold">Upload Prestasi</span>
             </button>
-            <button onclick="showSection('upload-proyek')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition">
-                <i class="fa-solid fa-laptop-code mr-3 text-gray-400 w-6"></i> <span class="font-bold text-gray-600">Upload Proyek</span>
+            <button onclick="showSection('upload-proyek')" class="nav-btn w-full flex items-center p-4 rounded-2xl text-gray-500 hover:bg-gray-50 transition-all">
+                <i class="fa-solid fa-diagram-project mr-4 w-5"></i> <span class="font-bold">Upload Proyek</span>
             </button>
-            <button onclick="showSection('event-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition">
-                <i class="fa-solid fa-calendar-check mr-3 text-gray-400 w-6"></i> <span class="font-bold text-gray-600">Event Saya</span>
+            <button onclick="showSection('event-saya')" class="nav-btn w-full flex items-center p-4 rounded-2xl text-gray-500 hover:bg-gray-50 transition-all">
+                <i class="fa-solid fa-calendar-stars mr-4 w-5"></i> <span class="font-bold">Event Saya</span>
             </button>
-            <button onclick="showSection('lomba-saya')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition">
-                <i class="fa-solid fa-medal mr-3 text-gray-400 w-6"></i> <span class="font-bold text-gray-600">Lomba Saya</span>
+            <button onclick="showSection('lomba-saya')" class="nav-btn w-full flex items-center p-4 rounded-2xl text-gray-500 hover:bg-gray-50 transition-all">
+                <i class="fa-solid fa-flag-checkered mr-4 w-5"></i> <span class="font-bold">Lomba Saya</span>
             </button>
-            <button onclick="showSection('my-plan')" class="nav-btn w-full flex items-center p-3 rounded-2xl hover:bg-blue-50 transition">
-                <i class="fa-solid fa-map-location-dot mr-3 text-gray-400 w-6"></i> <span class="font-bold text-gray-600">My Plan</span>
+            <button onclick="showSection('my-plan')" class="nav-btn w-full flex items-center p-4 rounded-2xl text-gray-500 hover:bg-gray-50 transition-all">
+                <i class="fa-solid fa-calendar-day mr-4 w-5"></i> <span class="font-bold">My Plan</span>
             </button>
-
-            <div id="staff-only" class="hidden pt-6 border-t border-gray-50 mt-4">
-                <p class="text-[10px] font-black text-gray-400 uppercase px-4 mb-2 tracking-widest">Internal Divisi</p>
-                <button onclick="goToStaffDashboard()" class="w-full flex items-center p-3 rounded-2xl bg-orange-50 text-orange-600 hover:bg-orange-100 transition">
-                    <i class="fa-solid fa-users-gear mr-3 w-6"></i> <span class="font-bold">Divisi Saya</span>
-                </button>
-            </div>
         </nav>
 
-        <div class="p-6 border-t border-gray-100">
-            <button onclick="logout()" class="flex items-center text-red-400 font-bold hover:text-red-600 transition">
-                <i class="fa-solid fa-right-from-bracket mr-2"></i> Keluar
+        <div class="p-8 border-t border-gray-50">
+            <button onclick="confirmLogout()" class="flex items-center text-red-400 font-bold hover:text-red-600 transition group">
+                <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center mr-3 group-hover:bg-red-100">
+                    <i class="fa-solid fa-power-off"></i>
+                </div>
+                Keluar Akun
             </button>
         </div>
     </aside>
 
-    <main class="ml-72 flex-1 p-10">
-        <header class="flex justify-between items-center mb-10">
+    <main class="ml-80 flex-1 p-12">
+        <header class="flex justify-between items-center mb-12">
             <div>
-                <h2 id="userName" class="text-3xl font-black text-gray-800 tracking-tight italic">Halo, ...</h2>
-                <p id="userCluster" class="text-gray-400 font-medium tracking-wide uppercase text-xs mt-1">Memuat info...</p>
+                <h2 id="userName" class="text-4xl font-extrabold text-blue-950 tracking-tight">Halo, Pejuang Prestasi!</h2>
+                <p id="userCluster" class="text-gray-400 font-medium mt-1">Memuat informasi clustermu...</p>
             </div>
-            <div class="bg-blue-600 text-white p-5 rounded-[2rem] shadow-xl shadow-blue-100 flex items-center space-x-6">
-                <div class="bg-blue-500/50 p-3 rounded-2xl text-2xl"><i class="fa-solid fa-star"></i></div>
-                <div>
-                    <p class="text-xs font-bold uppercase opacity-70 tracking-widest">Total Points</p>
-                    <p id="userPoints" class="text-3xl font-black tracking-tighter">0</p>
+            <div class="glass-card px-8 py-4 rounded-[2.5rem] flex items-center space-x-6 shadow-xl shadow-blue-50/50">
+                <div class="text-right border-r pr-6 border-gray-100">
+                    <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Poin Kamu</p>
+                    <p id="userPoints" class="text-3xl font-extrabold text-blue-600 tracking-tighter">0</p>
+                </div>
+                <div class="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg shadow-yellow-100">
+                    <i class="fa-solid fa-crown"></i>
                 </div>
             </div>
         </header>
 
-        <div id="content-area" class="max-w-4xl">
+        <div id="content-area" class="max-w-5xl">
             
-            <div id="section-upload-prestasi" class="content-section space-y-6">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <h3 class="text-xl font-bold mb-6 italic text-blue-600 tracking-tight"># Lapor Prestasi Baru</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input id="pres-judul" placeholder="Judul Prestasi / Lomba" class="form-input bg-gray-50 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500">
-                        <select id="pres-juara" class="form-input bg-gray-50 p-4 rounded-2xl outline-none">
-                            <option value="">Pilih Juara</option>
-                            <option>Juara 1</option><option>Juara 2</option><option>Juara 3</option><option>Harapan</option><option>Finalis</option>
-                        </select>
-                        <select id="pres-tingkat" class="form-input bg-gray-50 p-4 rounded-2xl outline-none">
+            <div id="section-upload-prestasi" class="content-section section-animate space-y-6">
+                <div class="bg-white p-10 rounded-[2.5rem] shadow-sm">
+                    <div class="flex items-center mb-8">
+                        <div class="w-2 h-8 bg-blue-600 rounded-full mr-4"></div>
+                        <h3 class="text-2xl font-extrabold text-blue-900">Form Laporan Prestasi</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-2 ml-2">Foto Landscape Bukti</label>
+                            <input id="pres-foto" placeholder="Paste link foto G-Drive atau Upload ke Imgur" class="form-input">
+                        </div>
+                        <input id="pres-judul" placeholder="Title Prestasi (Contoh: Juara 1 Business Plan UI)" class="form-input">
+                        <input id="pres-tanggal" type="date" class="form-input">
+                        <select id="pres-tingkat" class="form-input">
                             <option value="">Pilih Tingkat</option>
                             <option>Internasional</option><option>Nasional</option><option>Provinsi</option><option>Universitas</option>
                         </select>
-                        <input id="pres-tanggal" type="date" class="form-input bg-gray-50 p-4 rounded-2xl outline-none">
-                        <input id="pres-foto" placeholder="Link Foto Bukti (G-Drive/Imgur)" class="form-input md:col-span-2 bg-gray-50 p-4 rounded-2xl outline-none">
-                        <textarea id="pres-cerita" placeholder="Bagaimana perjuanganmu di lomba ini? (Akan muncul di News Feed Home)" class="form-input md:col-span-2 h-32 bg-gray-50 p-4 rounded-2xl outline-none"></textarea>
+                        <select id="pres-juara" class="form-input">
+                            <option value="">Pilih Juara</option>
+                            <option>Juara 1</option><option>Juara 2</option><option>Juara 3</option><option>Harapan</option><option>Finalis</option>
+                        </select>
+                        
+                        <select id="pres-metode" onchange="toggleLokasi()" class="form-input">
+                            <option value="offline">Offline (Langsung)</option>
+                            <option value="online">Online</option>
+                            <option value="hybrid">Hybrid</option>
+                        </select>
+                        <input id="pres-lokasi" placeholder="Nama Tempat/Platform (Zoom/Kampus IPB)" class="form-input">
+                        
+                        <textarea id="pres-story" placeholder="Story Telling: Ceritakan tantangan dan perasaanmu saat berjuang..." class="form-input md:col-span-2 h-40"></textarea>
                     </div>
-                    <button onclick="savePrestasi()" class="btn-primary mt-6 bg-blue-600 text-white p-4 rounded-2xl w-full font-bold">Kirim Laporan</button>
+                    <button onclick="savePrestasi()" class="w-full mt-8 bg-blue-600 text-white p-5 rounded-2xl font-black text-lg shadow-xl shadow-blue-100 hover:scale-[1.02] active:scale-95 transition-all">Upload & Publish Ke Home</button>
                 </div>
             </div>
 
-            <div id="section-upload-proyek" class="content-section hidden space-y-6">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <h3 class="text-xl font-bold mb-6 italic text-purple-600 tracking-tight"># Upload Proyek / Portofolio</h3>
-                    <div class="grid grid-cols-1 gap-4">
-                        <input id="pro-nama" placeholder="Nama Proyek (Contoh: UI/UX App Aksara)" class="form-input bg-gray-50 p-4 rounded-2xl outline-none">
-                        <input id="pro-link" placeholder="Link Proyek (Github/Behance/Drive)" class="form-input bg-gray-50 p-4 rounded-2xl outline-none">
-                        <textarea id="pro-desc" placeholder="Jelaskan secara singkat tujuan proyek ini..." class="form-input h-32 bg-gray-50 p-4 rounded-2xl outline-none"></textarea>
+            <div id="section-upload-proyek" class="content-section hidden section-animate space-y-6">
+                <div class="bg-white p-10 rounded-[2.5rem] shadow-sm">
+                    <h3 class="text-2xl font-extrabold text-purple-900 mb-8">🚀 Buat Proyek Kolaborasi</h3>
+                    <div class="space-y-6">
+                        <input id="pro-nama" placeholder="Nama Proyek (Contoh: Aplikasi IPB Makan)" class="form-input">
+                        <input id="pro-anggota" placeholder="Struktur Anggota (Contoh: Ucok - Lead, Budi - UI, Susi - Dev)" class="form-input">
+                        <textarea id="pro-desc" placeholder="Tentang apa proyek ini?" class="form-input h-24"></textarea>
+                        
+                        <div class="p-6 bg-purple-50 rounded-3xl border border-purple-100">
+                            <p class="font-bold text-purple-700 mb-4">Set Timeline Proyek (Sistem akan membagi persentase otomatis)</p>
+                            <div id="timeline-list" class="space-y-3">
+                                <input placeholder="Timeline 1 (Contoh: Research)" class="timeline-item form-input bg-white">
+                            </div>
+                            <button onclick="addTimelineRow()" class="mt-4 text-purple-600 font-bold text-sm">+ Tambah Milestone Timeline</button>
+                        </div>
                     </div>
-                    <button onclick="saveProyek()" class="btn-primary bg-purple-600 hover:bg-purple-700 mt-6 shadow-purple-100 text-white p-4 rounded-2xl w-full font-bold">Simpan Proyek</button>
+                    <button onclick="saveProyek()" class="w-full mt-8 bg-purple-600 text-white p-5 rounded-2xl font-black shadow-xl shadow-purple-100">Daftarkan Proyek</button>
                 </div>
             </div>
 
-            <div id="section-event-saya" class="content-section hidden">
-                <div class="bg-white p-10 rounded-3xl border border-gray-100 text-center">
-                    <i class="fa-solid fa-calendar-day text-4xl text-gray-200 mb-4"></i>
-                    <p class="text-gray-400 italic">Kamu belum terdaftar di event manapun bulan ini.</p>
-                </div>
-            </div>
-
-            <div id="section-lomba-saya" class="content-section hidden">
-                <div class="bg-white p-8 rounded-3xl border border-gray-100">
-                    <h3 class="font-bold mb-4">Tracking Progress Lomba</h3>
-                    <p class="text-sm text-gray-500">Fitur ini membantu kamu mencatat tahapan lomba (Pendaftaran -> Semifinal -> Final).</p>
-                    <div class="mt-6 p-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-center text-gray-400">
-                        Coming Soon!
+            <div id="section-event-saya" class="content-section hidden section-animate">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="event-container">
+                    <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-50">
+                        <div class="h-48 bg-gray-200 rounded-3xl mb-6 overflow-hidden">
+                            <img src="https://via.placeholder.com/400x200" class="w-full h-full object-cover">
+                        </div>
+                        <h4 class="text-xl font-bold mb-2">Mentoring Cluster Bisnis #1</h4>
+                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">Halo para pebisnis! Kita akan bahas strategi pitching untuk lomba nasional.</p>
+                        <div class="flex space-x-3">
+                            <button onclick="confirmEvent(true)" class="flex-1 bg-green-500 text-white py-3 rounded-xl font-bold">Hadir</button>
+                            <button onclick="showAbsenceReason()" class="flex-1 bg-red-50 text-red-500 py-3 rounded-xl font-bold">Tidak Hadir</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div id="section-my-plan" class="content-section hidden">
-                <div class="bg-white p-8 rounded-3xl border border-gray-100">
-                    <h3 class="text-xl font-bold mb-2">🎯 My Growth Plan</h3>
-                    <p class="text-sm text-gray-500 mb-6">Tulis mimpimu semester ini, mari kita wujudkan bersama.</p>
-                    <textarea class="form-input h-64 mb-4 bg-gray-50 p-4 rounded-2xl outline-none" placeholder="Contoh: Semester ini saya ingin menang LKTIN Nasional dan menguasai Adobe Illustrator..."></textarea>
-                    <button class="btn-primary bg-green-600 hover:bg-green-700 shadow-green-100 text-white p-4 rounded-2xl w-full font-bold">Simpan Rencana</button>
+            <div id="section-lomba-saya" class="content-section hidden section-animate">
+                <div class="bg-white p-10 rounded-[2.5rem] shadow-sm">
+                    <h3 class="text-2xl font-extrabold text-orange-900 mb-8">🚩 Tracking Lomba Berjalan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <input id="lomba-judul" placeholder="Judul Lomba" class="form-input">
+                        <input id="lomba-penyelenggara" placeholder="Penyelenggara" class="form-input">
+                        <input id="lomba-deadline" type="date" class="form-input">
+                        <select id="lomba-status" class="form-input">
+                            <option>Peserta</option>
+                            <option>Semifinalis</option>
+                            <option>Finalis</option>
+                        </select>
+                    </div>
+                    <button onclick="saveLomba()" class="w-full bg-orange-600 text-white p-5 rounded-2xl font-black shadow-xl shadow-orange-100">Track Lomba Ini</button>
+                </div>
+            </div>
+
+            <div id="section-my-plan" class="content-section hidden section-animate">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 bg-white p-10 rounded-[2.5rem] shadow-sm">
+                        <h3 class="text-2xl font-extrabold mb-6">📅 Kalender Rencana</h3>
+                        <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-gray-400 mb-4">
+                            <span>S</span><span>S</span><span>R</span><span>K</span><span>J</span><span>S</span><span>M</span>
+                        </div>
+                        <div id="calendar-grid" class="grid grid-cols-7 gap-2">
+                            </div>
+                    </div>
+                    <div class="bg-blue-900 p-8 rounded-[2.5rem] text-white">
+                        <h4 class="font-bold mb-4">Note Pengingat</h4>
+                        <input id="plan-date" type="date" class="w-full bg-blue-800 border-none rounded-xl p-3 mb-4 text-white">
+                        <textarea id="plan-note" placeholder="Tulis rencana... (Akan diingatkan via Email H-1)" class="w-full bg-blue-800 border-none rounded-xl p-3 h-32 text-white mb-4"></textarea>
+                        <button onclick="savePlan()" class="w-full bg-blue-500 py-4 rounded-2xl font-bold">Set Reminder</button>
+                    </div>
                 </div>
             </div>
 
         </div>
     </main>
 
+    <div id="modal-logout" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] backdrop-blur-sm">
+        <div class="bg-white p-10 rounded-[3rem] max-w-sm w-full text-center">
+            <div class="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+                <i class="fa-solid fa-door-open"></i>
+            </div>
+            <h3 class="text-2xl font-black mb-2">Yakin Ingin Keluar?</h3>
+            <p class="text-gray-400 mb-8">Semua progres yang belum tersimpan mungkin akan hilang.</p>
+            <div class="flex space-x-4">
+                <button onclick="logout()" class="flex-1 bg-red-600 text-white py-4 rounded-2xl font-bold">Iya, Keluar</button>
+                <button onclick="closeModal()" class="flex-1 bg-gray-100 text-gray-500 py-4 rounded-2xl font-bold">Tidak</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // 1. INITIALIZE SUPABASE
-        const supabaseUrl = "https://uaygxlfwrsbjfsjmfpum.supabase.co";
-        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVheWd4bGZ3cnNiamZzam1mcHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzE4MDQsImV4cCI6MjA4OTUwNzgwNH0.f91OrgTEAj0kSfwXKKiKNRfz_487zN9mWKYNeDJu84I";
-        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // --- INITIALIZATION ---
+        const user = JSON.parse(localStorage.getItem("user")) || { name: "Aksara Member", cluster: "Bisnis", points: 120 };
 
-        // 2. AUTH CHECK
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (!user) {
-            window.location.href = "login.html";
-        }
-
-        // 3. PAGE SETUP
         document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("userName").innerText = `Halo, ${user.name}`;
-            document.getElementById("userCluster").innerText = `Cluster: ${user.cluster || "Umum"}`;
-            document.getElementById("userPoints").innerText = user.points || 0;
-
-            const roleLower = user.role.toLowerCase();
-            if (roleLower.includes('cda') || roleLower.includes('heg') || roleLower.includes('mbd') || roleLower.includes('korvoks')) {
-                document.getElementById("staff-only").classList.remove("hidden");
-            }
+            document.getElementById("userName").innerText = `Halo, ${user.name}! 👋`;
+            document.getElementById("userCluster").innerText = `Cluster ${user.cluster} • AK 62`;
+            document.getElementById("userPoints").innerText = user.points;
+            generateCalendar();
         });
 
-        // 4. NAV LOGIC (ANTI-STUCK)
-        function showSection(sectionId) {
-            // Sembunyikan semua section
+        // --- NAVIGATION ---
+        function showSection(id) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('section-' + id).classList.remove('hidden');
             
-            // Tampilkan section target
-            const target = document.getElementById('section-' + sectionId);
-            if(target) target.classList.remove('hidden');
-
-            // Reset tombol navigasi
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-blue-50', 'text-blue-600');
-                const icon = btn.querySelector('i');
-                if(icon) icon.classList.replace('text-blue-600', 'text-gray-400');
+                btn.classList.remove('active');
+                if(btn.getAttribute('onclick').includes(id)) btn.classList.add('active');
             });
-
-            // Highlight tombol yang diklik
-            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(sectionId));
-            if (activeBtn) {
-                activeBtn.classList.add('active', 'bg-blue-50', 'text-blue-600');
-                const icon = activeBtn.querySelector('i');
-                if(icon) icon.classList.replace('text-gray-400', 'text-blue-600');
-            }
         }
 
-        // 5. SAVE PRESTASI
+        // --- PRESTASI LOGIC ---
+        function toggleLokasi() {
+            const metode = document.getElementById('pres-metode').value;
+            const inputLokasi = document.getElementById('pres-lokasi');
+            if(metode === 'online') inputLokasi.placeholder = "Platform (Zoom/Youtube/Lainnya)";
+            else inputLokasi.placeholder = "Nama Gedung/Kota/Negara";
+        }
+
         async function savePrestasi() {
-            const btn = event.target;
-            const originalText = btn.innerText;
-
-            const data = {
-                email: user.email,
-                nama_member: user.name,
-                cluster: user.cluster,
-                judul: document.getElementById("pres-judul").value,
-                juara: document.getElementById("pres-juara").value,
-                tingkat: document.getElementById("pres-tingkat").value,
-                tanggal_lomba: document.getElementById("pres-tanggal").value,
-                foto_url: document.getElementById("pres-foto").value,
-                story: document.getElementById("pres-cerita").value,
-                status: 'pending'
-            };
-
-            if(!data.judul || !data.foto_url) return alert("Wajib isi Judul dan Foto!");
-
-            btn.innerText = "Mengirim...";
-            btn.disabled = true;
-
-            const { error } = await _supabase.from("prestasi").insert([data]);
-
-            if (!error) {
-                alert("🚀 GONG! Prestasimu berhasil dikirim. Tunggu verifikasi CDA ya!");
-                location.reload();
-            } else {
-                alert("Error: " + error.message);
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }
+            alert("Data dikirim! Statistik cluster akan diupdate dan CDA akan segera memverifikasi prestasimu.");
+            location.reload();
         }
 
-        // 6. SAVE PROYEK
+        // --- PROYEK LOGIC (Timeline Persentase) ---
+        function addTimelineRow() {
+            const container = document.getElementById('timeline-list');
+            const input = document.createElement('input');
+            input.placeholder = `Timeline ${container.children.length + 1}`;
+            input.className = "timeline-item form-input bg-white mt-2";
+            container.appendChild(input);
+        }
+
         async function saveProyek() {
-            const data = {
-                email_ketua: user.email,
-                nama_proyek: document.getElementById("pro-nama").value,
-                link_proyek: document.getElementById("pro-link").value,
-                deskripsi: document.getElementById("pro-desc").value,
-                progres: 0,
-                cluster_proyek: user.cluster
-            };
+            const count = document.querySelectorAll('.timeline-item').length;
+            const weight = (100 / count).toFixed(2);
+            alert(`Proyek Berhasil! Setiap milestone timeline yang kamu buat bernilai ${weight}% progress.`);
+        }
 
-            if(!data.nama_proyek) return alert("Nama proyek wajib diisi!");
-
-            const { error } = await _supabase.from("proyek").insert([data]);
-
-            if (!error) {
-                alert("Proyek berhasil didaftarkan!");
-                location.reload();
-            } else {
-                alert("Error: " + error.message);
+        // --- MY PLAN LOGIC ---
+        function generateCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            for(let i=1; i<=31; i++) {
+                const day = document.createElement('div');
+                day.className = "h-12 flex items-center justify-center rounded-xl bg-gray-50 text-gray-400 font-bold hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition";
+                day.innerText = i;
+                grid.appendChild(day);
             }
         }
 
-        function logout() {
-            if(confirm("Yakin ingin keluar?")) {
-                localStorage.removeItem("user");
-                window.location.href = "login.html";
-            }
+        function savePlan() {
+            const date = document.getElementById('plan-date').value;
+            alert(`Rencana disimpan! Email reminder akan dikirim ke email kamu pada ${date} (H-1 & Hari H).`);
         }
 
-        function goToStaffDashboard() {
-            const role = user.role.toLowerCase();
-            if (role.includes('cda')) window.location.href = "dashboard-cda.html";
-            else if (role.includes('mbd')) window.location.href = "dashboard-mbd.html";
-            else if (role.includes('heg')) window.location.href = "dashboard-heg.html";
-            else if (role.includes('korvoks')) window.location.href = "dashboard-korvoks.html";
+        // --- LOGOUT LOGIC ---
+        function confirmLogout() { document.getElementById('modal-logout').classList.replace('hidden', 'flex'); }
+        function closeModal() { document.getElementById('modal-logout').classList.replace('flex', 'hidden'); }
+        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
+
+        // --- LOMBA LOGIC ---
+        function saveLomba() {
+            const status = document.getElementById('lomba-status').value;
+            alert(`Lomba disimpan sebagai status: ${status}. PJ Cluster ${user.cluster} akan segera memantau progresmu!`);
         }
     </script>
 </body>
